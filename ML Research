@@ -42,8 +42,11 @@ long short-term memory networks (LSTM): known for their ability to spot long-ter
 - Audio Spectogram Transformer (AST): https://github.com/YuanGongND/ast?tab=readme-ov-file#Introduction
 
 
+TO DO:
 
-OTHER BIRD SONG IDENTIFICATION PROJECTS
+- research OTHER BIRD SONG IDENTIFICATION PROJECTS
+- research more about time-frequency domain features
+- research more ml models
 
 
 
