@@ -1,0 +1,4 @@
+- Download the Audio files into the jupyter lab
+- Line up the coded labels with the audio files
+- get the bird names corresponding to the codes
+- 
