@@ -13,6 +13,7 @@ https://www.tensorflow.org/io/tutorials/audio
 Pre-Processing
 - Framing: cutting a continuous stream into shorter pisces (frames)
 - Windowing: fixes a spectral leakage issue caused during Fourier transform. Usually done using Hanning window function
+- Windowing: fixes a spectral leakage issue caused during Fourier transform. Usually done using Hanning window function https://medium.com/@milana.shxanukova15/n-fft-parameter-in-fft-134712e1c79d
 - Overlap-add (OLA): preserves information caused by windowing
 
 Feature Extraction
@@ -31,6 +32,17 @@ Frequency domain
 - spectrogram obtained by using short-time fourier transformation
 - mel-frequency cepstral coefficients (MFCCs): used in analyzing human speech
 - Time-frequency: process of applying weights to the bins of a time-frequency representation to enhance, diminish, or isolate portions of audio.
+
+
+- NFFT
+  > frequency resolution = sample_rate / n_fft
+  > frequency resolution: how small a gap between freq are we differentiating
+  > sample_rate = 32,000 Hz
+  > NFFT of size N yields N/2 Frequencies
+  > https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.12223
+- Window
+  > small window focuses on frequencies in a small window of time
+
 
 
 
