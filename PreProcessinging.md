@@ -2,4 +2,4 @@
 - Line up the coded labels with the audio files
 - get the bird names corresponding to the codes
 - get the spectrograms
-- 
+- framing and windowing
