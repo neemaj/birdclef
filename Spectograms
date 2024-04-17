@@ -1,0 +1,20 @@
+- Frequency on y axis, time on x axis, color as amplitude
+- amplitude
+  > can be either linear or logaraithmic in scale (decibels)
+  > logarithmic amplitude usually used for emphasizing tonal relationship
+
+- generated
+  > band-pass filter
+    - has certain bands which only accepts frequencies in a given range
+    - Can use Audacity
+  > fourier transform
+    - A mathetmatical function that breaks down a singal into its component
+      frequencies. 
+    - Can be represented by a power spectral density that plots the power 
+      (high amp + high freq = high power) vs the frequency (often uses
+      the log frequency)
+    - Short Time Fourier Transform (STFT) applied on overlapping time chunks
+      of the audio file. Chucnks are combined using windowing
+    - Windowing:
+      >
+
