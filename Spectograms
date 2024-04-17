@@ -7,6 +7,7 @@
   > band-pass filter
     - has certain bands which only accepts frequencies in a given range
     - Can use Audacity
+    - high pass, low pass also can be used
   > fourier transform
     - A mathetmatical function that breaks down a singal into its component
       frequencies. 
@@ -17,4 +18,19 @@
       of the audio file. Chucnks are combined using windowing
     - Windowing:
       >
+> mel spectorgram
+    - Audio -> framing -> windowing -> STFT -> apply filter banks -> log Mel spectrum -> DCT -> MFCCS -> normalize
+    - changes amplitude to decibel (log of amplitude) and frequency to mel frequency (subset
+      of frequencies which humans percieve as equally far apart)
+    - AKA log-mel spectogram
+    - MFCCs
+      - transformes our MFCCS into ~40 coefficients that summarize the power the signal 
+        at different frequency ranges
+      - MFCCs can have an advantage over filterbanks as they are less correlated, but the high 
+        correlation might not cause a problem for deep neural networks
+      - https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html?source=post_page-----7ef383006040--------------------------------
+      - https://medium.com/@tanveer9812/mfccs-made-easy-7ef383006040
+
+
+
 
