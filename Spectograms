@@ -18,6 +18,7 @@
       of the audio file. Chucnks are combined using windowing
     - Windowing:
       >
+
 > mel spectorgram
     - Audio -> framing -> windowing -> STFT -> apply filter banks -> log Mel spectrum -> DCT -> MFCCS -> normalize
     - changes amplitude to decibel (log of amplitude) and frequency to mel frequency (subset
@@ -30,6 +31,9 @@
         correlation might not cause a problem for deep neural networks
       - https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html?source=post_page-----7ef383006040--------------------------------
       - https://medium.com/@tanveer9812/mfccs-made-easy-7ef383006040
+
+
+- figure out if we want to use MFCC or filter banks
 
 
 
