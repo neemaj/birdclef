@@ -1,3 +1,7 @@
+import tensorflow_io as tfio
+from pathlib import Path
+import tensorflow as tf
+
 def get_bird_audio_dict(folder_path):
     '''
         Params:
@@ -19,3 +23,19 @@ def get_bird_audio_dict(folder_path):
         audio_dict[bird_path.name] = [f for f in bird_list]
         
     return audio_dict
+
+
+def get_audio_tensor(file_path):
+    '''
+        Params:
+            file_path: string of path to the audio file
+
+        Return:
+            1D audio tensor
+    '''
+    audio = tfio.audio.AudioIOTensor(file_path)
+    audio_tensor = tf.squeeze(audio[:], axis=[-1])
+    return audio_tensor
+
+
+
