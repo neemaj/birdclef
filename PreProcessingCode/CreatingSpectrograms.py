@@ -61,7 +61,7 @@ def plot_spectrogram(spectrogram, ax):
     ax.pcolormesh(X, Y, log_spec)
     axes.set_title('Spectrogram')
     axes.set_xlabel('Time in seconds')
-    axes.set_ylabel('Freq in Hz')
+    axes.set_ylabel('log(Freq in Hz)')
 
 
 
