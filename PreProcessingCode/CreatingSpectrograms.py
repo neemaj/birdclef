@@ -4,21 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
-
-
-def get_audio_tensor(file_path):
-    '''
-        Params:
-            file_path: string of path to the audio file
-
-        Return:
-            1D audio tensor
-    '''
-    audio = tfio.audio.AudioIOTensor(file_path)
-    audio_tensor = tf.squeeze(audio[:], axis=[-1])
-    return audio_tensor
-
-
 def get_spectrogram(audio_tensor):
     '''Returns a spectogram
     Params: 
@@ -64,8 +49,7 @@ def plot_spectrogram(spectrogram, ax):
             ax: axes to be plotted on
     '''
     if len(spectrogram.shape) > 2:
-    assert len(spectrogram.shape) == 3
-    spectrogram = np.squeeze(spectrogram, axis=-1)
+        assert len(spectrogram.shape) == 3
     # Convert the frequencies to log scale and transpose, so that the time is
     # represented on the x-axis (columns).
     # Add an epsilon to avoid taking a log of zero.
