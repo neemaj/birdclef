@@ -12,6 +12,17 @@ from tensorflow.keras import models
 from IPython import display
 
 
+def get_audio_tensor(file_path):
+    '''
+        Params:
+            file_path: string of path to the audio file
+
+        Return:
+            1D audio tensor
+    '''
+    audio = tfio.audio.AudioIOTensor(file_path)
+    audio_tensor = tf.squeeze(audio[:], axis=[-1])
+    return audio_tensor
 
 
 def get_spectrogram(audio_tensor):
@@ -75,16 +86,5 @@ def plot_spectrogram(spectrogram, ax):
     axes.set_ylabel('Freq in Hz')
 
 
-def get_audio_tensor(file_path):
-    '''
-        Params:
-            file_path: string of path to the audio file
-
-        Return:
-            1D audio tensor
-    '''
-    audio = tfio.audio.AudioIOTensor(file_path)
-    audio_tensor = tf.squeeze(audio[:], axis=[-1])
-    return audio_tensor
 
 
