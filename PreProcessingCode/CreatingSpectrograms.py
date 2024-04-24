@@ -59,9 +59,9 @@ def plot_spectrogram(spectrogram, ax):
     X = np.linspace(0, np.size(spectrogram), num=width, dtype=int)
     Y = range(height)
     ax.pcolormesh(X, Y, log_spec)
-    axes.set_title('Spectrogram')
-    axes.set_xlabel('Time in seconds')
-    axes.set_ylabel('log(Freq in Hz)')
+    ax.set_title('Spectrogram')
+    ax.set_xlabel('Time in seconds')
+    ax.set_ylabel('log(Freq in Hz)')
 
 
 
