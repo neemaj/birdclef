@@ -83,5 +83,19 @@ def min_max_scale_spectrogram(spectrogram):
     return tf.divide(spectrogram, largestmax)
 
 
+def log_scale_spectrogram(spectrogram):
+    '''
+    Params:
+        spectrogram: 2D tensor representing the spectrogram where each row is a collection
+                    of amplitudes at various frequencies at a certain time
+    Returns: 2D spectrogram tensor with all amplitudes log scaled
+    '''
+    log_spectrogram = tf.convert_to_tensor(np.log((spectrogram.numpy()).T + np.finfo(float).eps))
+
+    
+    
+    return log_spectrogram
+
+
 
 
