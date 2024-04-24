@@ -59,9 +59,28 @@ def plot_spectrogram(spectrogram, ax):
     X = np.linspace(0, np.size(spectrogram), num=width, dtype=int)
     Y = range(height)
     ax.pcolormesh(X, Y, log_spec)
-    axes.set_title('Spectrogram')
-    axes.set_xlabel('Time in seconds')
-    axes.set_ylabel('log(Freq in Hz)')
+    ax.set_title('Spectrogram')
+    ax.set_xlabel('Time in seconds')
+    ax.set_ylabel('log(Freq in Hz)')
+
+
+def min_max_scale_spectrogram(spectrogram):
+    '''
+    Params:
+        spectrogram: 2D tensor representing the spectrogram where each row is a collection
+                    of amplitudes at various frequencies at a certain time
+    Returns: 2D spectrogram tensor with all amplitudes scaled from 0 to 1 using the max ampliitude
+                for that spectrogram
+    '''
+
+    largestmax = 0
+    for row in spectrogram:
+        currentmax = tf.reduce_max(row)
+        if (currentmax > largestmax):
+            largestmax = currentmax
+
+
+    return tf.divide(spectrogram, largestmax)
 
 
 
