@@ -10,7 +10,9 @@ def chunk_and_pad(spectrogram, chunk_size):
         Return:
             list of chunked up numpy arrays
     '''
-    spectrogram = np.array(spectrogram)
+    if not isinstance(spectrogram, np.ndarray):
+        spectrogram = np.array(spectrogram)
+        
     num_chunks = math.ceil(spectrogram.shape[0] / chunk_size)
     
     if spectrogram.shape[0] % chunk_size != 0: #we need to pad
@@ -31,6 +33,8 @@ def time_shift(spectrogram, shift):
         Return:
             time shifted numpy array
     '''
+    if not isinstance(spectrogram, np.ndarray):
+        spectrogram = np.array(spectrogram)
     return np.roll(spectrogram, shift, axis = 0)
 
 def pitch_shift(spectrogram, shift):
@@ -44,4 +48,7 @@ def pitch_shift(spectrogram, shift):
         Return:
             freq shifted numpy array
     '''
+    if not isinstance(spectrogram, np.ndarray):
+        spectrogram = np.array(spectrogram)
     return np.roll(spectrogram, shift, axis = 1)
+
