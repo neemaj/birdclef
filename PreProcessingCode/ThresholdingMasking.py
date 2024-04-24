@@ -5,18 +5,20 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_probability as tfp
 
+def mask(spectogram):
+    
+    spectrogram.numpy()
 
-spectrogram.numpy()
+    #Calculates median value of spectogram tensor
+    median_value = tfp.stats.percentile(spectrogram, 50.0)
 
-#Calculates median value of spectogram tensor
-median_value = tfp.stats.percentile(spectrogram, 50.0)
+    #Creates binary mask
+    binary_mask = tf.cast(spectrogram > median_value, tf.float32)
 
-#Creates binary mask
-binary_mask = tf.cast(spectrogram > median_value, tf.float32)
-
-#Applies mask to spectogram
-masked_spectrogram = tf.multiply(spectrogram, binary_mask)
-
+    #Applies mask to spectogram
+    masked_spectrogram = tf.multiply(spectrogram, binary_mask)
+    
+    return masked_spectrogram
 
 def plot_spectrogram(spectrogram, title):
     plt.figure(figsize=(10, 4))
@@ -27,6 +29,8 @@ def plot_spectrogram(spectrogram, title):
     plt.colorbar(format='%+2.0f dB')
     plt.show()
 
+
+masked_spectrogram = mask(spectrogram)
 # Plot the original spectrogram
 plot_spectrogram(spectrogram, 'Original Spectrogram')
 
