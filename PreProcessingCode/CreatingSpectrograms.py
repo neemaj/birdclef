@@ -63,6 +63,34 @@ def plot_spectrogram(spectrogram, ax):
     ax.set_xlabel('Time in seconds')
     ax.set_ylabel('log(Freq in Hz)')
 
+def plot_log_spectrogram(spectrogram, title):
+    '''
+    Params:
+        spectrogram: numpy array of spectrogram
+        title: name of spectrogram
+    '''
+    plt.figure(figsize=(10, 4))
+    plt.imshow(tf.math.log(spectrogram.T + 1e-6), aspect='auto', origin='lower')
+    plt.title(title)
+    plt.xlabel('Time')
+    plt.ylabel('Frequency')
+    plt.colorbar(format='%+2.0f dB')
+    plt.show()
+    
+def plot_abs_spectrogram(spectrogram, title):
+    '''
+    Params:
+        spectrogram: numpy array of spectrogram
+        title: name of spectrogram
+    '''
+    f, ax = plt.subplots(1, figsize=(10, 4))
+    plt.imshow(spectrogram.T, aspect='auto', origin='lower')
+    plt.title(title)
+    plt.xlabel('Time')
+    plt.ylabel('Frequency')
+    plt.colorbar()
+    plt.show()
+
 
 def min_max_scale_spectrogram(spectrogram):
     '''
