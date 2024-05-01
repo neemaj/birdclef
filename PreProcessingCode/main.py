@@ -1,11 +1,11 @@
 from CreatingSpectrograms import *
 from RetreivingAudioFiles import *
 from DataAugmentation import *
-from ThresholdMasking import *
+from NoiseReduction import *
 import tensorflow_io as tfio
 import matplotlib.pyplot as plt
 
-folder_path = 'INSERT FOLDER PATH HERE CONTAINING ALL BIRD AUDIO FILES'
+folder_path = '/Users/neema/Library/CloudStorage/OneDrive-Personal/UCI/DataScienceProjects/BirdCLEF/train_audio_smaller'
 
 def get_spectrogram_dict():
     '''
@@ -26,11 +26,76 @@ def get_spectrogram_dict():
     return spectrogram_dict
 
 
+def separate_noise(spectrogram_dict):
+    '''
+    Method used to get noise and signal
+
+        Returns:
+            Dictionary of signal, and list of noise, as a tuple
+    '''
+    noise_list = list()
+    signals_dict = dict()
+
+    for key in spectrogram_dict:
+         signals_dict[key] = list()
+         spectrogram_list = spectrogram_dict[key]
+         for spec in spectrogram_list:
+              #min max scale
+              mm_spec = min_max_scale_spectrogram(spec).numpy()
+
+
+              #mask
+              signal_spec, noise_spec = mask(mm_spec)
+
+              #erode/dilate
+              binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
+              signal_indicator = get_slices_indicator(binary_signal_spec)
+              signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
+
+
+
+              binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
+              noise_indicator = get_slices_indicator(binary_noise_spec)
+              noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
+              noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
+
+              #isolated
+              log_scale_spec = log_scale_spectrogram(spec).numpy()
+              isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
+              isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
+
+              #add to respective data structures
+              noise_list.append(isolated_noise_spec)
+              signals_dict[key].append(isolated_signal_spec)
+
+
+
+
+    return signals_dict, noise_list
+    
+def augment(signals_dict, noise_list):
+    '''
+    Method used to chunk, augment the data, and add in noise
+
+        Params:
+            signals_dict: dictionary of signal spectrograms
+            noise_list: list of noise spectrograms
+        Returns:
+            Dictionary of signal, and list of noise, as a tuple
+    '''
+    #for key in signals_dict:
+    #     key = 
+     
+
 def preprocess():
     '''
     Method used for preprocessing
     '''
     spectrogram_dict = get_spectrogram_dict()
+    signals_dict, noise_list = separate_noise(spectrogram_dict)
+    
+
+
 
     '''
     fig1, axes1 = plt.subplots(figsize=(12,8))
