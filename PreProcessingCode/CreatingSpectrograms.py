@@ -40,6 +40,7 @@ def get_spectrogram(audio_tensor):
     
     return spectrogram
 
+#OLD AND DEPRECATED
 #plots the log frequencies on y-axis and time on x axis
 def plot_spectrogram(spectrogram, ax):
     '''
