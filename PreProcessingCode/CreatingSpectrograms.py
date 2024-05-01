@@ -8,7 +8,7 @@ def get_spectrogram(audio_tensor):
     '''Returns a spectogram
     Params: 
       audio_tensor: 1D tensor that contains audio
-    Return: 2D tensor where rows== frequencies, cols = time, values = absolute value amplitude
+    Return: 2D tensor where rows== time, cols = frequencies, values = absolute value amplitude
     '''
     #make each frame 25 ms
     frame_size = 0.025
