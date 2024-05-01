@@ -1,3 +1,4 @@
+import numpy as np
 import math
 def chunk_and_pad(spectrogram, chunk_size):
     '''
@@ -51,4 +52,22 @@ def pitch_shift(spectrogram, shift):
     if not isinstance(spectrogram, np.ndarray):
         spectrogram = np.array(spectrogram)
     return np.roll(spectrogram, shift, axis = 1)
+
+
+def reduce_amplitude(spectrogram, factor):
+    '''
+    Method used to reduce the amplitude of a spectrogram.
+
+    Params:
+        spectrogram: numpy array of spectrogram
+        factor: scalar by which to reduce the amplitude (0 < factor < 1)
+
+    Return:
+        Amplitude reduced numpy array
+    '''
+    return spectrogram * factor
+
+reduced_spectrogram = reduce_amplitude(spectrogram, reduction_factor)
+
+print(reduced_spectrogram)  
 
