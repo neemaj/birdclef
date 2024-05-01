@@ -119,7 +119,7 @@ def log_scale_spectrogram(spectrogram):
                     of amplitudes at various frequencies at a certain time
     Returns: 2D spectrogram tensor with all amplitudes log scaled
     '''
-    log_spectrogram = tf.convert_to_tensor(np.log((spectrogram.numpy()).T + np.finfo(float).eps))
+    log_spectrogram = tf.convert_to_tensor(np.log((spectrogram.numpy()) + np.finfo(float).eps))
 
     
     
