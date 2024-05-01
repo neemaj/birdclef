@@ -125,6 +125,16 @@ def log_scale_spectrogram(spectrogram):
     
     return log_spectrogram
 
+def get_isolated_spectrogram(indicator, log_spec):
+    '''
+    Params:
+        indicator: the boolean numpy array that indicates what times (rows) to include in the spectrogram
+        log_spec: the logged spectrogram as a 2d Numpy Array
+    Returns:
+        2D numpy array with only the times indicated
+    '''
+    isolated_signal_spec = np.compress(indicator, log_spec,axis = 0)
+    return isolated_signal_spec
 
 
 
