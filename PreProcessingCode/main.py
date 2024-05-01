@@ -4,8 +4,9 @@ from DataAugmentation import *
 from NoiseReduction import *
 import tensorflow_io as tfio
 import matplotlib.pyplot as plt
+import time
 
-folder_path = '/Users/neema/Library/CloudStorage/OneDrive-Personal/UCI/DataScienceProjects/BirdCLEF/train_audio_smaller'
+folder_path = 'C:\\Users\\njrav\DS\\train_audio_smaller'
 
 def get_spectrogram_dict():
     '''
@@ -81,10 +82,9 @@ def augment(signals_dict, noise_list):
             signals_dict: dictionary of signal spectrograms
             noise_list: list of noise spectrograms
         Returns:
-            Dictionary of signal, and list of noise, as a tuple
+            3d numpy array of all the spectrograms, 1d numpy array of all the labels 
     '''
-    #for key in signals_dict:
-    #     key = 
+
      
 
 def preprocess():
@@ -93,6 +93,13 @@ def preprocess():
     '''
     spectrogram_dict = get_spectrogram_dict()
     signals_dict, noise_list = separate_noise(spectrogram_dict)
+    #data, labels = augment(signals_dict, noise_list)
+
+
+
+
+    plot_abs_spectrogram(signals_dict['ashwoo2'][2], 'Signal Test')
+    plot_abs_spectrogram(noise_list[10], 'Noise Test')
     
 
 
@@ -112,7 +119,9 @@ def preprocess():
 
 
 def main():
+        st = time.time()
         preprocess()
-
+        et = time.time()
+        print(et-st)
 if __name__ == "__main__":
 	main()
