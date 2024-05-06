@@ -38,7 +38,7 @@ def run_small_model(X_train, y_train, X_valid, y_valid):
     model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (64, 64,1)))
 
     model.add(Dense(1024, activation='relu'))
-    model.add(Dense(2, activation='softmax'))
+    model.add(Dense(1, activation='softmax'))
 
     model.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer=keras.optimizers.Nadam(learning_rate = 0.1), 
                    metrics=[metrics.Precision(), metrics.Recall(),metrics.AUC()])
