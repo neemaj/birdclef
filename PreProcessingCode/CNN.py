@@ -19,6 +19,7 @@ def run_small_model(X_train, y_train, X_valid, y_valid):
     Returns:
 
     '''
+    
 
     model = Sequential()
     model.add(Conv2D(64, kernel_size = (5,5), strides = (2,1), input_shape = ( 256, 128, 1), activation = "relu"))
