@@ -41,7 +41,7 @@ def run_small_model(X_train, y_train, X_valid, y_valid):
 
     model.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer=keras.optimizers.Nadam(learning_rate = 0.1), 
                    metrics=[metrics.Precision(), metrics.Recall(),metrics.AUC()])
-    model.fit(X_train,y_train, epochs = 3)
+    model.fit(X_train,y_train)
     
     accuracy = model.evaluate(X_valid, y_valid)
     print(f'accuracy: {accuracy}')
