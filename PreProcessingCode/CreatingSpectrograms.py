@@ -28,7 +28,7 @@ def get_spectrogram(audio_tensor):
     #Frequency Resolution = max frequency/fft_length
     #max frequency = sample_rate/2
     #16000/1024 = 15.625 Hz <-- size of frequency band we differentiate between
-    fft_length = 1024
+    fft_length = 255
   
     # Convert the audio_tensor to a spectrogram via a STFT.
     spectrogram = tf.signal.stft(
