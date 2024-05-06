@@ -67,7 +67,9 @@ def reduce_amplitude(spectrogram, factor):
     '''
     return spectrogram * factor
 
+'''
+#Testing Code
 reduced_spectrogram = reduce_amplitude(spectrogram, reduction_factor)
 
 print(reduced_spectrogram)  
-
+'''
