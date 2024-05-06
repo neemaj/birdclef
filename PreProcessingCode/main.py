@@ -6,6 +6,7 @@ import tensorflow_io as tfio
 import matplotlib.pyplot as plt
 import time
 import random
+from CNN import *
 
 #constants
 folder_path = 'C:\\Users\\njrav\DS\\train_one_audio'
@@ -89,7 +90,7 @@ def augment(signals_dict, noise_list):
         Returns:
             3d numpy array of all the spectrograms, 1d numpy array of all the labels 
     '''
-    X_train = np.empty((1,256,513))
+    X_train = np.empty((1,256,128))
     y_train = np.empty(1)
 
     #first, handle noises
@@ -113,7 +114,7 @@ def augment(signals_dict, noise_list):
                 chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
 
                 #pitch shift
-                chunked_spec = pitch_shift(chunked_spec, random.randrange(512))
+                chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
 
                 #add a random noise
                 noise_to_add_1 = reduce_amplitude(random.choice(chunked_noise), noise_reduce_factor)
@@ -183,11 +184,22 @@ def preprocess():
 
 def main():
     st = time.time()
-    X_train, y_train = preprocess()
+    X, y = preprocess()
+    X_train = X[:-4,:,:]
+    y_train = y[:-4]
+    X_valid = X[-4:,:,:]
+    y_valid = y[-4:]
+    print(np.shape(X_train))
+    print(np.shape(y_train))
+    print(np.shape(X_valid))
+    print(np.shape(y_valid))
+    run_small_model(X_train, y_train, X_valid, y_valid)
     et = time.time()
 
     if debug_mode:
         print("Time it took:")
         print(et-st)
+
+
 if __name__ == "__main__":
 	main()
