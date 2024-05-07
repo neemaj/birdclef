@@ -20,10 +20,12 @@ def get_spectrogram(audio_tensor):
     sample_rate = 32000
     
     #samples per window length
-    frame_length = frame_size * sample_rate
+    #frame_length = frame_size * sample_rate
+    frame_length = 512
     
     #samples per window step
-    frame_step=frame_stride * sample_rate
+    #frame_step=frame_stride * sample_rate
+    frame_step = 128
     
     #Frequency Resolution = max frequency/fft_length
     #max frequency = sample_rate/2
@@ -36,7 +38,6 @@ def get_spectrogram(audio_tensor):
     
     # Obtain the magnitude of the STFT.
     spectrogram = tf.abs(spectrogram)
-    
     
     return spectrogram
 
