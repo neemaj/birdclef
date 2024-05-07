@@ -10,7 +10,7 @@ from CNN import *
 
 #constants
 folder_path = 'C:\\Users\\njrav\DS\\train_one_audio'
-chunk_length = 256
+chunk_length = 512
 noise_reduce_factor = 0.4
 debug_mode = False
 
