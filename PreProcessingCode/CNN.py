@@ -22,27 +22,31 @@ def run_small_model(X_train, y_train, X_valid, y_valid):
     
 
     model = Sequential()
-    model.add(Conv2D(64, kernel_size = (5,5), strides = (2,1), input_shape = ( 256, 128, 1), activation = "relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = ( 256, 128, 1)))
+    model.add(Conv2D(64, kernel_size = (5,5), strides = (2,1), input_shape = (512, 256, 1), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (256, 256, 1)))
 
-    model.add(Conv2D(64, kernel_size = (5,5), strides = (1,1), input_shape = ( 64, 64,1), activation = "relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = ( 64, 64,1)))
+    model.add(Conv2D(64, kernel_size = (5,5), strides = (1,1), input_shape = (256, 256, 1), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (256, 256, 1)))
 
-    model.add(Conv2D(128, kernel_size = (5,5), strides = (1,1), input_shape = ( 64, 64,1), activation = "relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (64, 64,1)))
+    model.add(Conv2D(128, kernel_size = (5,5), strides = (1,1), input_shape = (256, 256, 1), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (256, 256, 1)))
 
-    model.add(Conv2D(256, kernel_size = (5,5), strides = (1,1), input_shape = ( 64, 64,1), activation = "relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = ( 64, 64,1)))
+    model.add(Conv2D(256, kernel_size = (5,5), strides = (1,1), input_shape = (256, 256, 1), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (256, 256, 1)))
 
-    model.add(Conv2D(256, kernel_size = (3,3), strides = (1,1), input_shape = (64, 64,1), activation = "relu"))
-    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (64, 64,1)))
-
+    model.add(Conv2D(256, kernel_size = (3,3), strides = (1,1), input_shape = (256, 256, 1), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), input_shape = (256, 256, 1)))
+    
+    model.add(Flatten())
+    
     model.add(Dense(1024, activation='relu'))
-    model.add(Dense(1, activation='softmax'))
+    model.add(Dense(X_train.shape[0], activation='softmax'))
 
     model.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer=keras.optimizers.Nadam(learning_rate = 0.1), 
-                   metrics=[metrics.Precision(), metrics.Recall(),metrics.AUC()])
-    model.fit(X_train,y_train)
+                  metrics=[keras.metrics.SparseCategoricalAccuracy()])
     
-    accuracy = model.evaluate(X_valid, y_valid)
-    print(f'accuracy: {accuracy}')
+    model.fit(X_train,y_train, epochs = 10)
+
+
+
+
