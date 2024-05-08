@@ -10,6 +10,7 @@ from CNN import *
 
 #constants
 folder_path = 'C:\\Users\\njrav\DS\\train_one_audio'
+freq_bins = 256
 chunk_length = 512
 noise_reduce_factor = 0.4
 debug_mode = False
@@ -90,7 +91,7 @@ def augment(signals_dict, noise_list):
         Returns:
             3d numpy array of all the spectrograms, 1d numpy array of all the labels 
     '''
-    X_train = np.empty((1,256,128))
+    X_train = np.empty((1,chunk_length,freq_bins))
     y_train = np.empty(1)
 
     #first, handle noises
@@ -161,21 +162,6 @@ def preprocess():
 
     return X_train, y_train
 
-
-    #plot_abs_spectrogram(signals_dict['ashwoo2'][2], 'Signal Test')
-    #plot_abs_spectrogram(noise_list[10], 'Noise Test')
-    
-
-
-
-    '''
-    fig1, axes1 = plt.subplots(figsize=(12,8))
-    plot_spectrogram(spectrogram_dict['asikoe2'][0].numpy(), axes1)
-    '''
-
-    
-
-    
     
 
 
