@@ -185,51 +185,52 @@ def main():
     #loop through each folder
     for key in audio_dict:
 		#loop through each file
-		for file in file_list:
+        for file in file_list:
 			#calculate spectrogram
-			tensor = get_audio_tensor(str(file))
-			spectrogram = get_spectrogram(tensor)
+            tensor = get_audio_tensor(str(file))
+            spectrogram = get_spectrogram(tensor)
 
 			#separate noise/signal
 			
 			#min max scale
-			mm_spec = min_max_scale_spectrogram(spectrogram).numpy()
+            mm_spec = min_max_scale_spectrogram(spectrogram).numpy()
 			
 			#mask
-			signal_spec, noise_spec = mask(mm_spec)
+            signal_spec, noise_spec = mask(mm_spec)
 
 			#erode/dilate
-			binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
-			signal_indicator = get_slices_indicator(binary_signal_spec)
-			signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
+            binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
+            signal_indicator = get_slices_indicator(binary_signal_spec)
+            signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
 
-			binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
-			noise_indicator = get_slices_indicator(binary_noise_spec)
-			noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
-			noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
+            binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
+            noise_indicator = get_slices_indicator(binary_noise_spec)
+            noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
+            noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
 
 			#isolated
-			log_scale_spec = log_scale_spectrogram(spec).numpy()
+            log_scale_spec = log_scale_spectrogram(spec).numpy()
 
 			#final signal and noise spec
-			isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
-			isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
+            isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
+            isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
 
 			
 			#X_train = np.empty((1,chunk_length,freq_bins))
 			#y_train = np.empty(1)
 	
 	  
-			chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
-			chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
+            chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
+            chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
 
-			for index in range(len(chunked_specs)):
-				numpy.save(path_to_created_specs + f'\\{key}\\{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+            for index in range(len(chunked_specs)):
+                numpy.save(path_to_created_specs + f'\\{key}\\{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
 
-			for index in range(len(chunked_noise)):
-				numpy.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+            for index in range(len(chunked_noise)):
+                numpy.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
 
-		'''
+
+        '''
 		
 		shifted_specs = list()
 		for chunked_spec in chunked_specs:
@@ -296,6 +297,6 @@ def main():
 
 
 if __name__ == "__main__":
-	main()
+    main()
 
 
