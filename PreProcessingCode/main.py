@@ -7,9 +7,11 @@ import matplotlib.pyplot as plt
 import time
 import random
 from CNN import *
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
 #constants
-folder_path = 'C:\\Users\\njrav\DS\\train_one_audio'
+folder_path = 'C:\\Users\\njrav\DS\\train_audio_smaller'
 freq_bins = 256
 chunk_length = 512
 noise_reduce_factor = 0.4
@@ -171,10 +173,13 @@ def preprocess():
 def main():
     st = time.time()
     X, y = preprocess()
-    X_train = X[:-4,:,:]
-    y_train = y[:-4]
-    X_valid = X[-4:,:,:]
-    y_valid = y[-4:]
+    
+    ltrain = LabelEncoder()
+    ltrain.fit(y)
+    encoded_y = ltrain.transform(y)
+    
+    X_train, X_valid, y_train, y_valid =  train_test_split(X, encoded_y, test_size = .25, train_size =.75)
+    
     print(np.shape(X_train))
     print(np.shape(y_train))
     print(np.shape(X_valid))
