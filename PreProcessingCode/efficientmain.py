@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import time
 import random
 from CNN import *
+import numpy as np
 
 #constants
 path_to_created_specs = 'C:\\Users\\njrav\DS\\bird_chunked_specs'
@@ -184,7 +185,7 @@ def main():
 
     #loop through each folder
     for key in audio_dict:
-	file_list = audio_dict[key]
+        file_list = audio_dict[key]
 	    
 	#loop through each file
         for file in file_list:
@@ -211,7 +212,7 @@ def main():
             noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
 
 			#isolated
-            log_scale_spec = log_scale_spectrogram(spec).numpy()
+            log_scale_spec = log_scale_spectrogram(spectrogram).numpy()
 
 			#final signal and noise spec
             isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
@@ -226,10 +227,10 @@ def main():
             chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
 
             for index in range(len(chunked_specs)):
-                numpy.save(path_to_created_specs + f'\\{key}\\{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+                np.save(path_to_created_specs + f'\\{key}\\{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
 
             for index in range(len(chunked_noise)):
-                numpy.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+                np.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
 
 
         '''
