@@ -184,7 +184,9 @@ def main():
 
     #loop through each folder
     for key in audio_dict:
-		#loop through each file
+	file_list = audio_dict[key]
+	    
+	#loop through each file
         for file in file_list:
 			#calculate spectrogram
             tensor = get_audio_tensor(str(file))
