@@ -236,7 +236,7 @@ def main():
                 np.save(path_to_created_specs + f'\\{key}\\{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
 
             for index in range(len(chunked_noise)):
-                np.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+                np.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
 
 
         '''
