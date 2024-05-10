@@ -9,6 +9,7 @@ import time
 import random
 from CNN import *
 import numpy as np
+import os
 
 #constants
 path_to_created_specs = 'C:\\Users\\njrav\DS\\bird_chunked_specs'
@@ -226,7 +227,12 @@ def main():
             chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
             chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
 
+            #check to see if directory exists
+            if not os.path.exists(path_to_created_specs):
+                os.makedirs(path_to_created_specs)
             for index in range(len(chunked_specs)):
+                if not os.path.exists(path_to_created_specs + f'\\{key}'):
+                    os.makedirs(path_to_created_specs + f'\\{key}')
                 np.save(path_to_created_specs + f'\\{key}\\{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
 
             for index in range(len(chunked_noise)):
