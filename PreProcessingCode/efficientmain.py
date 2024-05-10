@@ -85,68 +85,9 @@ def separate_noise(spectrogram_dict):
 
     return signals_dict, noise_list
     
-def augment(signals_dict, noise_list):
-    '''
-    Method used to chunk, augment the data, and add in noise
-
-        Params:
-            signals_dict: dictionary of signal spectrograms
-            noise_list: list of noise spectrograms
-        Returns:
-            3d numpy array of all the spectrograms, 1d numpy array of all the labels 
-    '''
-    X_train = np.empty((1,chunk_length,freq_bins))
-    y_train = np.empty(1)
-
-    #first, handle noises
-    chunked_noise = list()
-    for noise in noise_list:
-        chunked_noise.extend(chunk_and_pad(noise, chunk_length))
-
-
-    
-    for key in signals_dict:
-        full_signals_list = signals_dict[key]
-
-        for spec in full_signals_list:
-
-            #chunk and pad
-            chunked_specs = chunk_and_pad(spec, chunk_length)
-            
-            shifted_specs = list()
-            for chunked_spec in chunked_specs:
-                #time shift
-                chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
-
-                #pitch shift
-                chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
-
-                #add a random noise
-                noise_to_add_1 = reduce_amplitude(random.choice(chunked_noise), noise_reduce_factor)
-                noise_to_add_2 = reduce_amplitude(random.choice(chunked_noise), noise_reduce_factor)
-                noise_to_add_3 = reduce_amplitude(random.choice(chunked_noise), noise_reduce_factor)
-
-                if debug_mode:
-                    plot_abs_spectrogram(chunked_spec, 'chunked')
-                    plot_abs_spectrogram(noise_to_add_1, 'noise_to_add_1')
-                    plot_abs_spectrogram(noise_to_add_2, 'noise_to_add_2')
-                    plot_abs_spectrogram(noise_to_add_3, 'noise_to_add_3')
-                
-                chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
-
-                if debug_mode:
-                    plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
-                
-                #add as training data
-                chunked_spec = np.array([chunked_spec])
-                X_train = np.append(X_train, chunked_spec, axis=0)
-                y_train = np.append(y_train, key)
-            
-
-    return (np.delete(X_train, (0), axis=0), np.delete(y_train, 0))
     
 
-    
+
      
 
 def preprocess():
@@ -166,22 +107,11 @@ def preprocess():
 
     return X_train, y_train
 
-    
 
 
-
-
-
-def main():
-    st = time.time()
-
-    if debug_mode:
-        print("Time it took:")
-        print(et-st)
-
+def save_spectrograms():
     #load each file name into the dictionary
     audio_dict = get_bird_audio_dict(folder_path)
-    spectrogram_file_dict = dict()
 
 
     #loop through each folder
@@ -239,7 +169,70 @@ def main():
                 np.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
 
 
-        '''
+def augment():
+    spec_path_dict = dict()
+    noise_path_list = list()
+    bird_folders = list()
+    for entry in os.scandir(path_to_created_specs):
+        if entry.is_dir():
+            bird_folders.append(entry)
+
+    #testing
+    '''
+    for i in bird_folders:
+        print(i)
+    '''
+
+
+    # Iterate over files in directory
+    for bird_path in bird_folders:
+
+        #bird_list is a generator
+        bird_list = Path(bird_path).glob('**/*.npy')
+        spec_path_dict[bird_path.name] = [f for f in bird_list]
+
+    #get noise chunks paths
+    noise_path_list = Path(path_to_created_specs).glob('*.npy')
+
+
+    #testing
+    '''
+    for key in spec_path_dict:
+        for thing in spec_path_dict[key]:
+            print(thing)
+
+    for thing in noise_path_list:
+        print(thing)
+    '''
+
+    #load the npys
+    spec_dict = dict()
+    for key in spec_path_dict:
+        spec_dict[key] = list()
+        for file_path in spec_path_dict[key]:
+            spec_dict[key].append(np.load(file_path, allow_pickle=True))
+
+    noise_list = list()
+    for file_path in noise_path_list:
+        noise_list.append(np.load(file_path, allow_pickle=True))
+
+    #do the augmenting
+    
+
+def main():
+    st = time.time()
+
+    #don't spend work trying to get spectrograms if we aready have them
+    if not os.path.exists(path_to_created_specs):
+        save_spectrograms()
+
+    augment()
+    
+
+    print("Time it took:")
+    print(time.time()-st)
+
+'''
 		
 		shifted_specs = list()
 		for chunked_spec in chunked_specs:
