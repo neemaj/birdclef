@@ -168,7 +168,7 @@ def save_spectrograms():
             for index in range(len(chunked_noise)):
                 np.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
 
-
+#TODO: don't store everything in memory all at once, only load numpy when we need. with getting sound files, only load numpy array when explicitly adding to another, choose based off file paths
 def augment():
     spec_path_dict = dict()
     noise_path_list = list()
@@ -263,7 +263,8 @@ def main():
     if not os.path.exists(path_to_created_specs):
         save_spectrograms()
 
-    X_train, y_train = augment()
+    X, y = augment()
+    
     
 
     print("Time it took:")
