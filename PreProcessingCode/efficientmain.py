@@ -17,7 +17,7 @@ folder_path = 'C:\\Users\\njrav\DS\\train_one_audio'
 freq_bins = 256
 chunk_length = 512
 noise_reduce_factor = 0.4
-debug_mode = False
+debug_mode = True
 
 def get_spectrogram_dict():
     '''
@@ -217,6 +217,43 @@ def augment():
         noise_list.append(np.load(file_path, allow_pickle=True))
 
     #do the augmenting
+    X_train = np.empty((1,chunk_length,freq_bins))
+    y_train = np.empty(1)
+
+    for key in spec_dict:
+        chunked_specs = spec_dict[key]
+
+        for chunked_spec in chunked_specs:
+            #time shift
+            chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
+
+            #pitch shift
+            chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
+
+            #add a random noise
+            noise_to_add_1 = reduce_amplitude(random.choice(noise_list), noise_reduce_factor)
+            noise_to_add_2 = reduce_amplitude(random.choice(noise_list), noise_reduce_factor)
+            noise_to_add_3 = reduce_amplitude(random.choice(noise_list), noise_reduce_factor)
+
+            if debug_mode:
+                plot_abs_spectrogram(chunked_spec, 'chunked')
+                plot_abs_spectrogram(noise_to_add_1, 'noise_to_add_1')
+                plot_abs_spectrogram(noise_to_add_2, 'noise_to_add_2')
+                plot_abs_spectrogram(noise_to_add_3, 'noise_to_add_3')
+            
+            chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
+
+            if debug_mode:
+                plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
+            
+            #add as training data
+            chunked_spec = np.array([chunked_spec])
+            X_train = np.append(X_train, chunked_spec, axis=0)
+            y_train = np.append(y_train, key)
+            
+
+    return (np.delete(X_train, (0), axis=0), np.delete(y_train, 0))
+
     
 
 def main():
@@ -226,7 +263,7 @@ def main():
     if not os.path.exists(path_to_created_specs):
         save_spectrograms()
 
-    augment()
+    X_train, y_train = augment()
     
 
     print("Time it took:")
