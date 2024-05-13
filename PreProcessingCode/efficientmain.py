@@ -13,6 +13,7 @@ import os
 
 #constants
 path_to_created_specs = 'C:\\Users\\njrav\DS\\bird_chunked_specs'
+path_to_created_augments = 'C:\\Users\\njrav\DS\\bird_augmented'
 folder_path = 'C:\\Users\\njrav\DS\\train_one_audio'
 freq_bins = 256
 chunk_length = 512
@@ -205,6 +206,7 @@ def augment():
         print(thing)
     '''
 
+    '''
     #load the npys
     spec_dict = dict()
     for key in spec_path_dict:
@@ -212,18 +214,20 @@ def augment():
         for file_path in spec_path_dict[key]:
             spec_dict[key].append(np.load(file_path, allow_pickle=True))
 
+
     noise_list = list()
     for file_path in noise_path_list:
         noise_list.append(np.load(file_path, allow_pickle=True))
+    '''
 
     #do the augmenting
-    X_train = np.empty((1,chunk_length,freq_bins))
-    y_train = np.empty(1)
+    for key in spec_path_dict:
+        number_of_same_birds = 0
+        chunked_spec_paths = spec_path_dict[key]
 
-    for key in spec_dict:
-        chunked_specs = spec_dict[key]
-
-        for chunked_spec in chunked_specs:
+        for chunked_spec_path in chunked_spec_paths:
+            #load in the npy
+            chunked_spec = np.load(chunked_spec_path, allow_pickle=True)
             #time shift
             chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
 
@@ -231,9 +235,12 @@ def augment():
             chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
 
             #add a random noise
-            noise_to_add_1 = reduce_amplitude(random.choice(noise_list), noise_reduce_factor)
-            noise_to_add_2 = reduce_amplitude(random.choice(noise_list), noise_reduce_factor)
-            noise_to_add_3 = reduce_amplitude(random.choice(noise_list), noise_reduce_factor)
+            noise_to_add_path_1 = random.choice(noise_path_list)
+            noise_to_add_1 = reduce_amplitude(np.load(noise_to_add_path_1, allow_pickle=True), noise_reduce_factor)
+            noise_to_add_path_2 = random.choice(noise_path_list)
+            noise_to_add_2 = reduce_amplitude(np.load(noise_to_add_path_2, allow_pickle=True), noise_reduce_factor)
+            noise_to_add_path_3 = random.choice(noise_path_list)
+            noise_to_add_3 = reduce_amplitude(np.load(noise_to_add_path_3, allow_pickle=True), noise_reduce_factor)
 
             if debug_mode:
                 plot_abs_spectrogram(chunked_spec, 'chunked')
@@ -246,13 +253,14 @@ def augment():
             if debug_mode:
                 plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
             
-            #add as training data
-            chunked_spec = np.array([chunked_spec])
-            X_train = np.append(X_train, chunked_spec, axis=0)
-            y_train = np.append(y_train, key)
-            
-
-    return (np.delete(X_train, (0), axis=0), np.delete(y_train, 0))
+            #save to folder
+            if not os.path.exists(path_to_created_augments):
+                os.makedirs(path_to_created_augments)
+            path_to_current_bird = path_to_created_augments + f'\\{key}'
+            if not os.path.exists(path_to_current_bird):
+                os.makedirs(path_to_current_bird)
+            np.save(path_to_current_bird + f'\\{key}_augment_{number_of_same_birds}', chunked_spec, allow_pickle=True)
+            number_of_same_birds += 1
 
     
 
@@ -263,7 +271,8 @@ def main():
     if not os.path.exists(path_to_created_specs):
         save_spectrograms()
 
-    X, y = augment()
+    if not os.path.exists(path_to_created_augments):
+        augment()
     
     
 
