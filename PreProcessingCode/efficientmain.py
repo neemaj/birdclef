@@ -193,7 +193,7 @@ def augment():
         spec_path_dict[bird_path.name] = [f for f in bird_list]
 
     #get noise chunks paths
-    noise_path_list = Path(path_to_created_specs).glob('*.npy')
+    noise_path_list = list(Path(path_to_created_specs).glob('*.npy'))
 
 
     #testing
