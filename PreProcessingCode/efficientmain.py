@@ -273,6 +273,12 @@ def main():
 
     if not os.path.exists(path_to_created_augments):
         augment()
+
+    labels_dict = get_path_label(path_to_created_augments)
+
+    
+
+    
     
     
 

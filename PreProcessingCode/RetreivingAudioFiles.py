@@ -40,9 +40,8 @@ def get_path_label(folder_path):
 
     # Iterate over files in directory
     for bird_path in bird_folders:
-
         #bird_list is a generator
-        bird_list = Path(bird_path).glob('**/*.ogg')
+        bird_list = Path(bird_path).glob('**/*.npy')
         for f in bird_list:
             audio_dict[f] = bird_path.name
         

@@ -3,10 +3,11 @@
 
 #WHAT WE NEED: list of file paths, dictionary of file paths and their corresponding label
 import numpy as np
+from tensorflow import keras
 
 class Bird_Data_Generator(keras.utils.Sequence):
 
-    def __init__(self, file_paths, labels, freq_bins=256, chunk_length=512 batch_size=128, shuffle=True):
+    def __init__(self, file_paths, labels, freq_bins=256, chunk_length=512, batch_size=128, shuffle=True):
         self.file_paths = file_paths
         self.labels = labels
         self.batch_size = batch_size
