@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import time
 import random
 from CNN import *
+from BirdGenerator import *
 import numpy as np
 import os
 
@@ -169,7 +170,7 @@ def save_spectrograms():
             for index in range(len(chunked_noise)):
                 np.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
 
-#TODO: don't store everything in memory all at once, only load numpy when we need. with getting sound files, only load numpy array when explicitly adding to another, choose based off file paths
+#don't store everything in memory all at once, only load numpy when we need. with getting sound files, only load numpy array when explicitly adding to another, choose based off file paths
 def augment():
     spec_path_dict = dict()
     noise_path_list = list()
@@ -262,7 +263,6 @@ def augment():
             np.save(path_to_current_bird + f'\\{key}_augment_{number_of_same_birds}', chunked_spec, allow_pickle=True)
             number_of_same_birds += 1
 
-    
 
 def main():
     st = time.time()
