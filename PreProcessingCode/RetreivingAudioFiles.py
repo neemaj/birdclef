@@ -25,6 +25,30 @@ def get_bird_audio_dict(folder_path):
     return audio_dict
 
 
+def get_path_label(folder_path):
+    '''
+        Params:
+            file_path: string path to folder containing all bird audio files
+            
+        Returns:
+            dictionary where 
+              key = array of audio file paths corresponding to that bird
+              value = bird folder name as a string
+    '''
+    audio_dict = dict()
+    bird_folders= Path(folder_path).glob("*")
+
+    # Iterate over files in directory
+    for bird_path in bird_folders:
+
+        #bird_list is a generator
+        bird_list = Path(bird_path).glob('**/*.ogg')
+        for f in bird_list:
+            audio_dict[f] = bird_path.name
+        
+    return audio_dict
+
+
 def get_audio_tensor(file_path):
     '''
         Params:
