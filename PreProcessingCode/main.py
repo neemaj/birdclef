@@ -172,7 +172,23 @@ def preprocess():
 
 def main():
     st = time.time()
-    X, y = preprocess()
+    ##X, y = preprocess()
+
+    #finish all the getting the the spectrograms
+    # we will have path to the augmented spectrgrams
+
+	#transofrm the augmented specs folder into a list of aug spec paths
+	
+	# X_augs = list of augmented specs path
+	
+
+	# we will label encode y_augs
+	
+	#we will use train test split to split X_augs and y_augs into training and validation data
+
+	# we will then feed the X_augs_train and y_augs_train to a generator to make the training generator
+	# we will then feed the X_augs_validation and y_augs_validation to a generator to make the validation generator
+	
     
     ltrain = LabelEncoder()
     ltrain.fit(y)
