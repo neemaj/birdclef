@@ -1,4 +1,5 @@
 # help on how to create a bird generator received from https://stanford.edu/~shervine/blog/keras-how-to-generate-data-on-the-fly
+# much of the code is an altered version of their generator
 
 #WHAT WE NEED: list of file paths, dictionary of file paths and their corresponding label
 import numpy as np
