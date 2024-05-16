@@ -274,7 +274,20 @@ def main():
     if not os.path.exists(path_to_created_augments):
         augment()
 
+    #get label dictionary
     labels_dict = get_path_label(path_to_created_augments)
+
+    #get file path list
+    file_path_list = list()
+    bird_folders = list()
+    for entry in os.scandir(path_to_created_augments):
+        if entry.is_dir():
+            bird_folders.append(entry)
+    for bird_path in bird_folders:
+        file_path_list.extend(list(Path(bird_path).glob('**/*.npy')))
+
+        
+        
 
     
 
