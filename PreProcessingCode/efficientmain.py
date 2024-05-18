@@ -11,11 +11,22 @@ from CNN import *
 from BirdGenerator import *
 import numpy as np
 import os
+from sklearn.model_selection import train_test_split
 
 #constants
-path_to_created_specs = 'C:\\Users\\njrav\DS\\bird_chunked_specs'
-path_to_created_augments = 'C:\\Users\\njrav\DS\\bird_augmented'
-folder_path = 'C:\\Users\\njrav\DS\\train_one_audio'
+RUN_NEEMA = False
+
+if RUN_NEEMA:
+    path_to_created_specs = 'C:\\Users\\njrav\DS\\bird_chunked_specs'
+    path_to_created_augments = 'C:\\Users\\njrav\DS\\bird_augmented'
+    folder_path = '\something i forgot im sorry'
+    pc = '\\'
+else:
+    path_to_created_specs = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/PreProcessingCode/bird_chunked_specs'
+    path_to_created_augments = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/PreProcessingCode/bird_augmented'
+    folder_path = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/train_audio_smaller'
+    pc = '/'
+
 freq_bins = 256
 chunk_length = 512
 noise_reduce_factor = 0.4
@@ -163,12 +174,13 @@ def save_spectrograms():
             if not os.path.exists(path_to_created_specs):
                 os.makedirs(path_to_created_specs)
             for index in range(len(chunked_specs)):
-                if not os.path.exists(path_to_created_specs + f'\\{key}'):
-                    os.makedirs(path_to_created_specs + f'\\{key}')
-                np.save(path_to_created_specs + f'\\{key}\\{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+                
+                if not os.path.exists(path_to_created_specs + f'{pc}{key}'):
+                    os.makedirs(path_to_created_specs + f'{pc}{key}')
+                np.save(path_to_created_specs + f'{pc}{key}{pc}{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
 
             for index in range(len(chunked_noise)):
-                np.save(path_to_created_specs + f'\\noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
+                np.save(path_to_created_specs + f'{pc}noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
 
 #don't store everything in memory all at once, only load numpy when we need. with getting sound files, only load numpy array when explicitly adding to another, choose based off file paths
 def augment():
@@ -187,6 +199,7 @@ def augment():
 
 
     # Iterate over files in directory
+  
     for bird_path in bird_folders:
 
         #bird_list is a generator
@@ -220,6 +233,8 @@ def augment():
     for file_path in noise_path_list:
         noise_list.append(np.load(file_path, allow_pickle=True))
     '''
+    #dictionary that maps every path (key) to its bird (value)
+    
 
     #do the augmenting
     for key in spec_path_dict:
@@ -251,16 +266,19 @@ def augment():
             
             chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
 
-            if debug_mode:
-                plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
+            #if debug_mode:
+                #plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
             
             #save to folder
             if not os.path.exists(path_to_created_augments):
                 os.makedirs(path_to_created_augments)
-            path_to_current_bird = path_to_created_augments + f'\\{key}'
+            path_to_current_bird = path_to_created_augments + f'{pc}{key}'
             if not os.path.exists(path_to_current_bird):
                 os.makedirs(path_to_current_bird)
-            np.save(path_to_current_bird + f'\\{key}_augment_{number_of_same_birds}', chunked_spec, allow_pickle=True)
+
+            path_name = path_to_current_bird + f'{pc}{key}_augment_{number_of_same_birds}'
+            
+            np.save(path_name, chunked_spec, allow_pickle=True)
             number_of_same_birds += 1
 
 
@@ -274,10 +292,10 @@ def main():
     if not os.path.exists(path_to_created_augments):
         augment()
 
-    #get label dictionary
-    labels_dict = get_path_label(path_to_created_augments)
+    
+    
 
-    #get file path list
+    labels_dict = get_path_label(path_to_created_augments, pc)
     file_path_list = list()
     bird_folders = list()
     for entry in os.scandir(path_to_created_augments):
@@ -285,15 +303,32 @@ def main():
             bird_folders.append(entry)
     for bird_path in bird_folders:
         file_path_list.extend(list(Path(bird_path).glob('**/*.npy')))
+   
+    
+    #print(f'bird is {labels_dict[file_path_list[0]]}')
+    #print(file_path_list[0:5])
+        
+        
+    #finish all the getting the the spectrograms
+    #we will have path to the augmented spectrograms
+    #we have a folder of aug specs
+    #make a dictionary that matches every path to its label
+        
+    #get a list of all of those spec paths
+
+    #we will use train test split to split into spec paths for the validation and training data
+    train_paths, valid_paths = train_test_split(file_path_list, test_size=0.25, random_state=42)
+
+    X_train, X_valid = np.array(train_paths), np.array(valid_paths)
+    # we will then feed the X_augs_train and label dictionary to a generator to make the training generator
+    run_small_gen_model( train_paths, valid_paths, labels_dict)
+
+    # we will then feed the X_augs_validation and label dictionary  to a generator to make the validation generator 
+        
 
         
         
-
-    
-
-    
-    
-    
+        
 
     print("Time it took:")
     print(time.time()-st)

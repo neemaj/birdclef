@@ -7,7 +7,7 @@ from tensorflow import keras
 
 class Bird_Data_Generator(keras.utils.Sequence):
 
-    def __init__(self, file_paths, labels, freq_bins=256, chunk_length=512, batch_size=128, shuffle=True):
+    def __init__(self, file_paths, labels, freq_bins=256, chunk_length=512, batch_size=3, shuffle=True):
         self.file_paths = file_paths
         self.labels = labels
         self.batch_size = batch_size
@@ -17,7 +17,9 @@ class Bird_Data_Generator(keras.utils.Sequence):
         self.on_epoch_end()
 
     def __len__(self):
-        return int(np.floor(len(self.file_paths) / self.batch_size))
+        len_value = int(np.floor(len(self.file_paths) / self.batch_size))
+        print(len_value)
+        return len_value
 
     def __getitem__(self, index):
         indexes = self.indexes[index*self.batch_size:(index+1)*self.batch_size]
@@ -32,13 +34,15 @@ class Bird_Data_Generator(keras.utils.Sequence):
             np.random.shuffle(self.indexes)
 
     def __data_generation(self, file_paths_temp):
-        X = np.empty((self.batch_size, chunk_length,freq_bins))
-        y = np.empty((self.batch_size))
+        #X = np.empty((self.batch_size, self.chunk_length,self.freq_bins))
+        X = np.empty([self.batch_size, 512, 256])
+        y = np.empty([self.batch_size])
 
         for i, path in enumerate(file_paths_temp):
             X[i,] = np.load(path, allow_pickle=True)
-            y[i] = self.labels[path]
+            y[i] = self.labels[path.name]
 
+        print(f'shape is {X.shape}')
         return X, y
         
         

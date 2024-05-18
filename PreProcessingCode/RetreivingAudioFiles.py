@@ -1,6 +1,8 @@
 import tensorflow_io as tfio
 from pathlib import Path
 import tensorflow as tf
+from sklearn.preprocessing import LabelEncoder
+import os, sys
 
 def get_bird_audio_dict(folder_path):
     '''
@@ -25,7 +27,7 @@ def get_bird_audio_dict(folder_path):
     return audio_dict
 
 
-def get_path_label(folder_path):
+def get_path_label(folder_path, pc):
     '''
         Params:
             file_path: string path to folder containing all bird audio files
@@ -36,14 +38,22 @@ def get_path_label(folder_path):
               value = bird folder name as a string
     '''
     audio_dict = dict()
-    bird_folders= Path(folder_path).glob("*")
+    bird_folders = os.listdir(Path(folder_path))
+    
+    ltrain = LabelEncoder()
+
+    ltrain.fit(bird_folders)
+    
+    
 
     # Iterate over files in directory
     for bird_path in bird_folders:
         #bird_list is a generator
-        bird_list = Path(bird_path).glob('**/*.npy')
+        bird_list = os.listdir(Path(folder_path + pc + bird_path))
         for f in bird_list:
-            audio_dict[f] = bird_path.name
+            #audio_dict[f] = bird_path.name
+            
+            audio_dict[f] = ltrain.transform([bird_path])[0]
         
     return audio_dict
 
