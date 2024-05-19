@@ -14,12 +14,12 @@ import os
 from sklearn.model_selection import train_test_split
 
 #constants
-RUN_NEEMA = False
+RUN_NEEMA = True
 
 if RUN_NEEMA:
-    path_to_created_specs = 'C:\\Users\\njrav\DS\\bird_chunked_specs'
-    path_to_created_augments = 'C:\\Users\\njrav\DS\\bird_augmented'
-    folder_path = '\something i forgot im sorry'
+    path_to_created_specs = 'D:\\DS\\bird_chunked_specs'
+    path_to_created_augments = 'D:\\DS\\bird_augmented'
+    folder_path = 'C:\\Users\\njrav\DS\\train_audio_smaller'
     pc = '\\'
 else:
     path_to_created_specs = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/PreProcessingCode/bird_chunked_specs'
@@ -287,14 +287,24 @@ def main():
 
     #don't spend work trying to get spectrograms if we aready have them
     if not os.path.exists(path_to_created_specs):
+        spec_start_time = time.time()
         save_spectrograms()
+        print("Time it took to make spectrograms:")
+        print(f'{time.time()-spec_start_time}')
+    else:
+        print(f'{path_to_created_specs} already exists')
 
     if not os.path.exists(path_to_created_augments):
+        aug_start_time = time.time()
         augment()
+        print("Time it took to make augments:")
+        print(f'{time.time()-aug_start_time}')
+    else:
+        print(f'{path_to_created_augments} already exists')
 
     
+    train_start_time = time.time()
     
-
     labels_dict = get_path_label(path_to_created_augments, pc)
     file_path_list = list()
     bird_folders = list()
@@ -329,8 +339,9 @@ def main():
         
         
         
-
-    print("Time it took:")
+    print("Train time:")
+    print(time.time()-train_start_time)
+    print("Total time it took:")
     print(time.time()-st)
 
 
