@@ -31,11 +31,11 @@ else:
 freq_bins = 256
 chunk_length = 512
 noise_reduce_factor = 0.4
-debug_mode = True
+debug_mode = False
 
 
 
-def save_bird_spectrograms(file, bird_name):
+def save_bird_spectrograms(file, bird_name, file_id):
     tensor = get_audio_tensor(str(file))
     spectrogram = get_spectrogram(tensor)
 
@@ -69,10 +69,10 @@ def save_bird_spectrograms(file, bird_name):
     chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
 
     for index in range(len(chunked_specs)):
-        np.save(path_to_created_specs + f'{pc}{bird_name}{pc}{bird_name}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+        np.save(path_to_created_specs + f'{pc}{bird_name}{pc}{bird_name}_signal_chunk{file_id}-{index}.npy', chunked_specs[index], allow_pickle=True)
 
     for index in range(len(chunked_noise)):
-        np.save(path_to_created_specs + f'{pc}noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
+        np.save(path_to_created_specs + f'{pc}noise_chunk{bird_name}-{file_id}-{index}.npy', chunked_noise[index], allow_pickle=True)
 
 
 
@@ -92,20 +92,53 @@ def save_spectrograms():
 
         #gets the list of files for that bird
         file_list = audio_dict[key]
-        tupled_files = [(file_path,key) for file_path in list_of_file_paths]
+        tupled_files = [(file_path,key,index) for index, file_path in enumerate(file_list)]
 
         with Pool() as p:
             p.starmap(save_bird_spectrograms, tupled_files)
 
 
         
-	    
-	#loop through each file
-        for file in file_list:
-			#calculate spectrogram
+def augment_bird_file(chunked_spec_path, key, file_id, noise_path_list):
+    #load in the npy
+    chunked_spec = np.load(chunked_spec_path, allow_pickle=True)
+    #time shift
+    chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
+
+    #pitch shift
+    chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
+
+    #add a random noise
+    noise_to_add_path_1 = random.choice(noise_path_list)
+    noise_to_add_1 = reduce_amplitude(np.load(noise_to_add_path_1, allow_pickle=True), noise_reduce_factor)
+    noise_to_add_path_2 = random.choice(noise_path_list)
+    noise_to_add_2 = reduce_amplitude(np.load(noise_to_add_path_2, allow_pickle=True), noise_reduce_factor)
+    noise_to_add_path_3 = random.choice(noise_path_list)
+    noise_to_add_3 = reduce_amplitude(np.load(noise_to_add_path_3, allow_pickle=True), noise_reduce_factor)
+
+    if debug_mode:
+        plot_abs_spectrogram(chunked_spec, 'chunked')
+        plot_abs_spectrogram(noise_to_add_1, 'noise_to_add_1')
+        plot_abs_spectrogram(noise_to_add_2, 'noise_to_add_2')
+        plot_abs_spectrogram(noise_to_add_3, 'noise_to_add_3')
+    
+    chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
+
+    #if debug_mode:
+        #plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
+    
+    #save to folder
+    path_to_current_bird = path_to_created_augments + f'{pc}{key}'
+
+    path_name = path_to_current_bird + f'{pc}{key}_augment_{file_id}'
+    
+    np.save(path_name, chunked_spec, allow_pickle=True)
+    
             
 #don't store everything in memory all at once, only load numpy when we need. with getting sound files, only load numpy array when explicitly adding to another, choose based off file paths
 def augment():
+    if not os.path.exists(path_to_created_augments):
+        os.makedirs(path_to_created_augments)
     spec_path_dict = dict()
     noise_path_list = list()
     bird_folders = list()
@@ -160,48 +193,15 @@ def augment():
 
     #do the augmenting
     for key in spec_path_dict:
-        number_of_same_birds = 0
         chunked_spec_paths = spec_path_dict[key]
+        path_to_current_bird = path_to_created_augments + f'{pc}{key}'
+        if not os.path.exists(path_to_current_bird):
+            os.makedirs(path_to_current_bird)
 
-        for chunked_spec_path in chunked_spec_paths:
-            #load in the npy
-            chunked_spec = np.load(chunked_spec_path, allow_pickle=True)
-            #time shift
-            chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
+        tupled_files = [(file_path,key,index, noise_path_list) for index, file_path in enumerate(chunked_spec_paths)]
 
-            #pitch shift
-            chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
-
-            #add a random noise
-            noise_to_add_path_1 = random.choice(noise_path_list)
-            noise_to_add_1 = reduce_amplitude(np.load(noise_to_add_path_1, allow_pickle=True), noise_reduce_factor)
-            noise_to_add_path_2 = random.choice(noise_path_list)
-            noise_to_add_2 = reduce_amplitude(np.load(noise_to_add_path_2, allow_pickle=True), noise_reduce_factor)
-            noise_to_add_path_3 = random.choice(noise_path_list)
-            noise_to_add_3 = reduce_amplitude(np.load(noise_to_add_path_3, allow_pickle=True), noise_reduce_factor)
-
-            if debug_mode:
-                plot_abs_spectrogram(chunked_spec, 'chunked')
-                plot_abs_spectrogram(noise_to_add_1, 'noise_to_add_1')
-                plot_abs_spectrogram(noise_to_add_2, 'noise_to_add_2')
-                plot_abs_spectrogram(noise_to_add_3, 'noise_to_add_3')
-            
-            chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
-
-            #if debug_mode:
-                #plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
-            
-            #save to folder
-            if not os.path.exists(path_to_created_augments):
-                os.makedirs(path_to_created_augments)
-            path_to_current_bird = path_to_created_augments + f'{pc}{key}'
-            if not os.path.exists(path_to_current_bird):
-                os.makedirs(path_to_current_bird)
-
-            path_name = path_to_current_bird + f'{pc}{key}_augment_{number_of_same_birds}'
-            
-            np.save(path_name, chunked_spec, allow_pickle=True)
-            number_of_same_birds += 1
+        with Pool() as p:
+            p.starmap(augment_bird_file, tupled_files)
 
 
 def main():
