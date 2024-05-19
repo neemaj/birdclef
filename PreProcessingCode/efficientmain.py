@@ -12,6 +12,7 @@ from BirdGenerator import *
 import numpy as np
 import os
 from sklearn.model_selection import train_test_split
+from multiprocessing import Pool
 
 #constants
 RUN_NEEMA = True
@@ -34,9 +35,12 @@ debug_mode = True
 
 
 
-
+def save_bird_spectrograms():
+    
 
 def save_spectrograms():
+    if not os.path.exists(path_to_created_specs):
+        os.makedirs(path_to_created_specs)
     #load each file name into the dictionary
     audio_dict = get_bird_audio_dict(folder_path)
 
@@ -84,9 +88,6 @@ def save_spectrograms():
             chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
             chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
 
-            #check to see if directory exists
-            if not os.path.exists(path_to_created_specs):
-                os.makedirs(path_to_created_specs)
             for index in range(len(chunked_specs)):
                 
                 if not os.path.exists(path_to_created_specs + f'{pc}{key}'):
