@@ -1,3 +1,11 @@
 .ipynb_checkpoints
 PreProcessingCode/__pycache__
 birdclef-2024/
+*.npy
+PreProcessingCode/.DS_Store
+.vscode/launch.json
+*.ogg
+train_audio_smaller/asiope1/.DS_Store
+train_audio_smaller/.DS_Store
+PreProcessingCode/BirdCLEF.code-workspace
+.DS_Store
