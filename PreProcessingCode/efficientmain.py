@@ -35,68 +35,75 @@ debug_mode = True
 
 
 
-def save_bird_spectrograms():
+def save_bird_spectrograms(file, bird_name):
+    tensor = get_audio_tensor(str(file))
+    spectrogram = get_spectrogram(tensor)
+
+    #separate noise/signal
     
+    #min max scale
+    mm_spec = min_max_scale_spectrogram(spectrogram).numpy()
+    
+    #mask
+    signal_spec, noise_spec = mask(mm_spec)
+
+    #erode/dilate
+    binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
+    signal_indicator = get_slices_indicator(binary_signal_spec)
+    signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
+
+    binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
+    noise_indicator = get_slices_indicator(binary_noise_spec)
+    noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
+    noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
+
+    #isolated
+    log_scale_spec = log_scale_spectrogram(spectrogram).numpy()
+
+    #final signal and noise spec
+    isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
+    isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
+
+
+    chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
+    chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
+
+    for index in range(len(chunked_specs)):
+        np.save(path_to_created_specs + f'{pc}{bird_name}{pc}{bird_name}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
+
+    for index in range(len(chunked_noise)):
+        np.save(path_to_created_specs + f'{pc}noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
+
+
 
 def save_spectrograms():
+    #make the folder for all the spectrograms
     if not os.path.exists(path_to_created_specs):
         os.makedirs(path_to_created_specs)
+
     #load each file name into the dictionary
     audio_dict = get_bird_audio_dict(folder_path)
 
-
-    #loop through each folder
+    #loop through all the birds folders
     for key in audio_dict:
+        #makes the folder for that bird's new spectrograms
+        if not os.path.exists(path_to_created_specs + f'{pc}{key}'):
+            os.makedirs(path_to_created_specs + f'{pc}{key}')
+
+        #gets the list of files for that bird
         file_list = audio_dict[key]
+        tupled_files = [(file_path,key) for file_path in list_of_file_paths]
+
+        with Pool() as p:
+            p.starmap(save_bird_spectrograms, tupled_files)
+
+
+        
 	    
 	#loop through each file
         for file in file_list:
 			#calculate spectrogram
-            tensor = get_audio_tensor(str(file))
-            spectrogram = get_spectrogram(tensor)
-
-			#separate noise/signal
-			
-			#min max scale
-            mm_spec = min_max_scale_spectrogram(spectrogram).numpy()
-			
-			#mask
-            signal_spec, noise_spec = mask(mm_spec)
-
-			#erode/dilate
-            binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
-            signal_indicator = get_slices_indicator(binary_signal_spec)
-            signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
-
-            binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
-            noise_indicator = get_slices_indicator(binary_noise_spec)
-            noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
-            noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
-
-			#isolated
-            log_scale_spec = log_scale_spectrogram(spectrogram).numpy()
-
-			#final signal and noise spec
-            isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
-            isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
-
-			
-			#X_train = np.empty((1,chunk_length,freq_bins))
-			#y_train = np.empty(1)
-	
-	  
-            chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
-            chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
-
-            for index in range(len(chunked_specs)):
-                
-                if not os.path.exists(path_to_created_specs + f'{pc}{key}'):
-                    os.makedirs(path_to_created_specs + f'{pc}{key}')
-                np.save(path_to_created_specs + f'{pc}{key}{pc}{key}_signal_chunk{index}.npy', chunked_specs[index], allow_pickle=True)
-
-            for index in range(len(chunked_noise)):
-                np.save(path_to_created_specs + f'{pc}noise_chunk{index}.npy', chunked_noise[index], allow_pickle=True)
-
+            
 #don't store everything in memory all at once, only load numpy when we need. with getting sound files, only load numpy array when explicitly adding to another, choose based off file paths
 def augment():
     spec_path_dict = dict()
