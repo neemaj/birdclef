@@ -249,7 +249,7 @@ def main():
     #get a list of all of those spec paths
 
     #we will use train test split to split into spec paths for the validation and training data
-    train_paths, valid_paths = train_test_split(file_path_list, test_size=0.25, random_state=42)
+    train_paths, valid_paths = train_test_split(file_path_list, test_size=0.10, random_state=42)
 
     X_train, X_valid = np.array(train_paths), np.array(valid_paths)
     # we will then feed the X_augs_train and label dictionary to a generator to make the training generator
