@@ -36,10 +36,6 @@ debug_mode = True
 
 
 
-     
-
-
-
 def save_spectrograms():
     #load each file name into the dictionary
     audio_dict = get_bird_audio_dict(folder_path)
