@@ -20,7 +20,7 @@ RUN_NEEMA = True
 if RUN_NEEMA:
     path_to_created_specs = 'D:\\DS\\bird_chunked_specs'
     path_to_created_augments = 'D:\\DS\\bird_augmented'
-    folder_path = 'C:\\Users\\njrav\DS\\train_audio_smaller'
+    folder_path = 'C:\\Users\\njrav\\DS\\BirdCLEF\\birdclef-2024\\train_audio'
     pc = '\\'
 else:
     path_to_created_specs = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/PreProcessingCode/bird_chunked_specs'
@@ -36,43 +36,47 @@ debug_mode = False
 
 
 def save_bird_spectrograms(file, bird_name, file_id):
-    tensor = get_audio_tensor(str(file))
-    spectrogram = get_spectrogram(tensor)
-
-    #separate noise/signal
+    path_to_created_spec = path_to_created_specs + f'{pc}{bird_name}{pc}{bird_name}_signal_chunk{file_id}-0.npy'
+    path_to_created_noise = path_to_created_specs + f'{pc}noise_chunk{bird_name}-{file_id}-0.npy'
+    if not os.path.exists(path_to_created_spec) or not os.path.exists(path_to_created_noise):
+        tensor = get_audio_tensor(str(file))
+        spectrogram = get_spectrogram(tensor)
     
-    #min max scale
-    mm_spec = min_max_scale_spectrogram(spectrogram).numpy()
+        #separate noise/signal
+        
+        #min max scale
+        mm_spec = min_max_scale_spectrogram(spectrogram).numpy()
+        
+        #mask
+        signal_spec, noise_spec = mask(mm_spec)
     
-    #mask
-    signal_spec, noise_spec = mask(mm_spec)
-
-    #erode/dilate
-    binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
-    signal_indicator = get_slices_indicator(binary_signal_spec)
-    signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
-
-    binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
-    noise_indicator = get_slices_indicator(binary_noise_spec)
-    noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
-    noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
-
-    #isolated
-    log_scale_spec = log_scale_spectrogram(spectrogram).numpy()
-
-    #final signal and noise spec
-    isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
-    isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
-
-
-    chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
-    chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
-
-    for index in range(len(chunked_specs)):
-        np.save(path_to_created_specs + f'{pc}{bird_name}{pc}{bird_name}_signal_chunk{file_id}-{index}.npy', chunked_specs[index], allow_pickle=True)
-
-    for index in range(len(chunked_noise)):
-        np.save(path_to_created_specs + f'{pc}noise_chunk{bird_name}-{file_id}-{index}.npy', chunked_noise[index], allow_pickle=True)
+        #erode/dilate
+        binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
+        signal_indicator = get_slices_indicator(binary_signal_spec)
+        signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
+    
+        binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
+        noise_indicator = get_slices_indicator(binary_noise_spec)
+        noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
+        noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
+    
+        #isolated
+        log_scale_spec = log_scale_spectrogram(spectrogram).numpy()
+    
+        #final signal and noise spec
+        isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
+        isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
+    
+    
+        if isolated_signal_spec.shape[0] != 0:
+            chunked_specs = chunk_and_pad(isolated_signal_spec, chunk_length)
+            chunked_noise = chunk_and_pad(isolated_noise_spec, chunk_length)
+        
+            for index in range(len(chunked_specs)):
+                np.save(path_to_created_specs + f'{pc}{bird_name}{pc}{bird_name}_signal_chunk{file_id}-{index}.npy', chunked_specs[index], allow_pickle=True)
+        
+            for index in range(len(chunked_noise)):
+                np.save(path_to_created_specs + f'{pc}noise_chunk{bird_name}-{file_id}-{index}.npy', chunked_noise[index], allow_pickle=True)
 
 
 
@@ -94,7 +98,7 @@ def save_spectrograms():
         file_list = audio_dict[key]
         tupled_files = [(file_path,key,index) for index, file_path in enumerate(file_list)]
 
-        with Pool() as p:
+        with Pool(max(1, os.cpu_count()- 1)) as p:
             p.starmap(save_bird_spectrograms, tupled_files)
 
 
@@ -200,7 +204,7 @@ def augment():
 
         tupled_files = [(file_path,key,index, noise_path_list) for index, file_path in enumerate(chunked_spec_paths)]
 
-        with Pool() as p:
+        with Pool(max(1, os.cpu_count()- 1)) as p:
             p.starmap(augment_bird_file, tupled_files)
 
 
@@ -208,7 +212,7 @@ def main():
     st = time.time()
 
     #don't spend work trying to get spectrograms if we aready have them
-    if not os.path.exists(path_to_created_specs):
+    if True: #not os.path.exists(path_to_created_specs):
         spec_start_time = time.time()
         save_spectrograms()
         print("Time it took to make spectrograms:")
@@ -224,7 +228,7 @@ def main():
     else:
         print(f'{path_to_created_augments} already exists')
 
-    
+    '''
     train_start_time = time.time()
     
     labels_dict = get_path_label(path_to_created_augments, pc)
@@ -262,7 +266,7 @@ def main():
         
         
     print("Train time:")
-    print(time.time()-train_start_time)
+    print(time.time()-train_start_time)'''
     print("Total time it took:")
     print(time.time()-st)
 
