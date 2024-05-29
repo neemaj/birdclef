@@ -13,6 +13,7 @@ import numpy as np
 import os
 from sklearn.model_selection import train_test_split
 from multiprocessing import Pool
+import json
 
 #constants
 RUN_NEEMA = False
@@ -230,6 +231,7 @@ def augment():
 
 
 def main():
+    
     st = time.time()
 
     #don't spend work trying to get spectrograms if we aready have them
@@ -249,7 +251,7 @@ def main():
     else:
         print(f'{path_to_created_augments} already exists')
 
-    '''
+    
     train_start_time = time.time()
     
     labels_dict = get_path_label(path_to_created_augments, pc)
@@ -284,9 +286,20 @@ def main():
         
         
     print("Train time:")
-    print(time.time()-train_start_time)'''
+    print(time.time()-train_start_time)
     print("Total time it took:")
     print(time.time()-st)
+    '''
+
+    # Recreate the exact same model, including its weights and the optimizer
+    new_model = tf.keras.models.load_model('/Users/katiefrields/Desktop/BirdProject/BirdCLEF/model0.keras')
+
+    # Show the model architecture
+    new_model.summary()
+
+    parsed = new_model.get_config()
+    print(json.dumps(parsed, indent=4))
+'''
 
     
 
