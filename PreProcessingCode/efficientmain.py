@@ -104,39 +104,57 @@ def save_spectrograms():
 
         
 def augment_bird_file(chunked_spec_path, key, file_id, noise_path_list):
-    #load in the npy
-    chunked_spec = np.load(chunked_spec_path, allow_pickle=True)
-    #time shift
-    chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
-
-    #pitch shift
-    chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
-
-    #add a random noise
-    noise_to_add_path_1 = random.choice(noise_path_list)
-    noise_to_add_1 = reduce_amplitude(np.load(noise_to_add_path_1, allow_pickle=True), noise_reduce_factor)
-    noise_to_add_path_2 = random.choice(noise_path_list)
-    noise_to_add_2 = reduce_amplitude(np.load(noise_to_add_path_2, allow_pickle=True), noise_reduce_factor)
-    noise_to_add_path_3 = random.choice(noise_path_list)
-    noise_to_add_3 = reduce_amplitude(np.load(noise_to_add_path_3, allow_pickle=True), noise_reduce_factor)
-
-    if debug_mode:
-        plot_abs_spectrogram(chunked_spec, 'chunked')
-        plot_abs_spectrogram(noise_to_add_1, 'noise_to_add_1')
-        plot_abs_spectrogram(noise_to_add_2, 'noise_to_add_2')
-        plot_abs_spectrogram(noise_to_add_3, 'noise_to_add_3')
-    
-    chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
-
-    #if debug_mode:
-        #plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
-    
-    #save to folder
     path_to_current_bird = path_to_created_augments + f'{pc}{key}'
-
     path_name = path_to_current_bird + f'{pc}{key}_augment_{file_id}'
+    #20 percent chance of printing what bird we're on
+    if random.randint(1,100) < 20:
+        print(path_name)
+    if not os.path.exists(path_name):
+        
+        #load in the npy
+        chunked_spec = np.load(chunked_spec_path, allow_pickle=True)
     
-    np.save(path_name, chunked_spec, allow_pickle=True)
+        if chunked_spec.shape == (512,256):
+            #time shift
+            chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
+        
+            #pitch shift
+            chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
+    
+            while True:
+            
+                #add a random noise
+                noise_to_add_path_1 = random.choice(noise_path_list)
+                noise_to_add_1 = reduce_amplitude(np.load(noise_to_add_path_1, allow_pickle=True), noise_reduce_factor)
+                noise_to_add_path_2 = random.choice(noise_path_list)
+                noise_to_add_2 = reduce_amplitude(np.load(noise_to_add_path_2, allow_pickle=True), noise_reduce_factor)
+                noise_to_add_path_3 = random.choice(noise_path_list)
+                noise_to_add_3 = reduce_amplitude(np.load(noise_to_add_path_3, allow_pickle=True), noise_reduce_factor)
+    
+                if noise_to_add_1.shape == (512,256) and noise_to_add_2.shape == (512,256) and noise_to_add_3.shape == (512,256):
+                    break
+        
+            if debug_mode:
+                plot_abs_spectrogram(chunked_spec, 'chunked')
+                plot_abs_spectrogram(noise_to_add_1, 'noise_to_add_1')
+                plot_abs_spectrogram(noise_to_add_2, 'noise_to_add_2')
+                plot_abs_spectrogram(noise_to_add_3, 'noise_to_add_3')
+            
+        
+    
+            chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
+    
+                
+        
+            #if debug_mode:
+                #plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
+            
+            #save to folder
+            path_to_current_bird = path_to_created_augments + f'{pc}{key}'
+        
+            path_name = path_to_current_bird + f'{pc}{key}_augment_{file_id}'
+            
+            np.save(path_name, chunked_spec, allow_pickle=True)
     
             
 #don't store everything in memory all at once, only load numpy when we need. with getting sound files, only load numpy array when explicitly adding to another, choose based off file paths
@@ -212,7 +230,7 @@ def main():
     st = time.time()
 
     #don't spend work trying to get spectrograms if we aready have them
-    if True: #not os.path.exists(path_to_created_specs):
+    if not os.path.exists(path_to_created_specs):
         spec_start_time = time.time()
         save_spectrograms()
         print("Time it took to make spectrograms:")
@@ -220,7 +238,7 @@ def main():
     else:
         print(f'{path_to_created_specs} already exists')
 
-    if not os.path.exists(path_to_created_augments):
+    if True: #not os.path.exists(path_to_created_augments):
         aug_start_time = time.time()
         augment()
         print("Time it took to make augments:")
