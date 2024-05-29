@@ -15,6 +15,8 @@ def chunk_and_pad(spectrogram, chunk_size):
         spectrogram = np.array(spectrogram)
         
     num_chunks = math.ceil(spectrogram.shape[0] / chunk_size)
+    if num_chunks == 0:
+        num_chunks = 1
     
     if spectrogram.shape[0] % chunk_size != 0: #we need to pad
         num_zeros = num_chunks*chunk_size - spectrogram.shape[0]
