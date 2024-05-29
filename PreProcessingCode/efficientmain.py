@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 from multiprocessing import Pool
 
 #constants
-RUN_NEEMA = False
+RUN_NEEMA = True
 model_count= 0
 recheck_specs = False
 recheck_augment = False
@@ -112,7 +112,7 @@ def augment_bird_file(chunked_spec_path, key, file_id, noise_path_list):
     path_to_current_bird = path_to_created_augments + f'{pc}{key}'
     path_name = path_to_current_bird + f'{pc}{key}_augment_{file_id}'
     #20 percent chance of printing what bird we're on
-    if random.randint(1,100) < 20:
+    if debug_mode and random.randint(1,100) < 20:
         print(path_name)
     if not os.path.exists(path_name):
         
