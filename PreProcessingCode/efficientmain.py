@@ -15,7 +15,8 @@ from sklearn.model_selection import train_test_split
 from multiprocessing import Pool
 
 #constants
-RUN_NEEMA = True
+RUN_NEEMA = False
+model_count= 0
 
 if RUN_NEEMA:
     path_to_created_specs = 'D:\\DS\\bird_chunked_specs'
@@ -26,6 +27,8 @@ else:
     path_to_created_specs = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/PreProcessingCode/bird_chunked_specs'
     path_to_created_augments = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/PreProcessingCode/bird_augmented'
     folder_path = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/train_audio_smaller'
+    best_model_path = f'/Users/katiefrields/Desktop/BirdProject/BirdCLEF/model{model_count}.keras'
+    
     pc = '/'
 
 freq_bins = 256
@@ -237,8 +240,7 @@ def main():
         file_path_list.extend(list(Path(bird_path).glob('**/*.npy')))
    
     
-    #print(f'bird is {labels_dict[file_path_list[0]]}')
-    #print(file_path_list[0:5])
+   
         
         
     #finish all the getting the the spectrograms
@@ -253,12 +255,10 @@ def main():
 
     X_train, X_valid = np.array(train_paths), np.array(valid_paths)
     # we will then feed the X_augs_train and label dictionary to a generator to make the training generator
-    run_small_gen_model( train_paths, valid_paths, labels_dict)
-
+    run_small_hp_model( train_paths, valid_paths, labels_dict, best_model_path)
+    global model_count
+    model_count+= 1
     # we will then feed the X_augs_validation and label dictionary  to a generator to make the validation generator 
-        
-
-        
         
         
     print("Train time:")
@@ -266,6 +266,7 @@ def main():
     print("Total time it took:")
     print(time.time()-st)
 
+    
 
 if __name__ == "__main__":
     main()
