@@ -16,8 +16,10 @@ from multiprocessing import Pool
 import json
 
 #constants
-RUN_NEEMA = False
+RUN_NEEMA = True
 model_count= 0
+recheck_specs = False
+recheck_augment = False
 
 if RUN_NEEMA:
     path_to_created_specs = 'D:\\DS\\bird_chunked_specs'
@@ -111,7 +113,7 @@ def augment_bird_file(chunked_spec_path, key, file_id, noise_path_list):
     path_to_current_bird = path_to_created_augments + f'{pc}{key}'
     path_name = path_to_current_bird + f'{pc}{key}_augment_{file_id}'
     #20 percent chance of printing what bird we're on
-    if random.randint(1,100) < 20:
+    if debug_mode and random.randint(1,100) < 20:
         print(path_name)
     if not os.path.exists(path_name):
         
@@ -235,7 +237,7 @@ def main():
     st = time.time()
 
     #don't spend work trying to get spectrograms if we aready have them
-    if not os.path.exists(path_to_created_specs):
+    if recheck_specs or not os.path.exists(path_to_created_specs):
         spec_start_time = time.time()
         save_spectrograms()
         print("Time it took to make spectrograms:")
@@ -243,7 +245,7 @@ def main():
     else:
         print(f'{path_to_created_specs} already exists')
 
-    if True: #not os.path.exists(path_to_created_augments):
+    if recheck_augment or not os.path.exists(path_to_created_augments):
         aug_start_time = time.time()
         augment()
         print("Time it took to make augments:")
