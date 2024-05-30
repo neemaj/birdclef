@@ -137,7 +137,7 @@ def run_small_hp_model(X_train, X_valid, label_dict, path):
     # Generators
     
 
-
+'''
 def build_model(hp, input_shape, batch_size):
     # Design model
     model = Sequential()
@@ -174,6 +174,45 @@ def build_model(hp, input_shape, batch_size):
 
     return model
     
+'''
+
+def build_model(hp, input_shape, batch_size):
+    # Design model
+    model = Sequential()
+    model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
+
+
+    
+    model.add(layers.Conv2D(
+        filters=32,
+        kernel_size=(3,3),
+        activation='relu'))
+
+    model.add(layers.MaxPooling2D( pool_size=(2,2), strides = (2,1)))
+
+
+    model.add(layers.Conv2D(
+        filters=32,
+        kernel_size=(3,3),
+        activation='relu'))
+
+    model.add(layers.MaxPooling2D( pool_size=(2,2), strides = (2,1)))
+
+        
+    model.add(layers.Flatten())
+
+    model.add(layers.Dense(
+        units=hp.Int('units', min_value=512, max_value=1024, step=256),
+        activation='relu'))
+
+
+    model.add(Dense(input_shape[0], activation='softmax'))
+
+    model.compile(
+        optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  loss='sparse_categorical_crossentropy')
+
+    return model
+
     
     
 def tune_hyperparameters(train_generator, valid_generator, input_shape):

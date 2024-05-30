@@ -16,7 +16,7 @@ from multiprocessing import Pool
 import json
 
 #constants
-RUN_NEEMA = True
+RUN_NEEMA = False
 model_count= 0
 recheck_specs = False
 recheck_augment = False
