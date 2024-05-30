@@ -10,6 +10,9 @@ from tensorflow.keras.layers import Dropout
 from BirdGenerator import *
 import keras_tuner as kt
 
+#constants
+is_neema = True
+
 
 def run_small_model(X_train, y_train, X_valid, y_valid):
     '''
@@ -216,13 +219,22 @@ def build_model(hp, input_shape, batch_size):
     
     
 def tune_hyperparameters(train_generator, valid_generator, input_shape):
-    tuner = kt.RandomSearch(
-    lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
-    objective='val_accuracy',
-    max_trials=5,  #Adjust if needed
-    executions_per_trial=3,
-    directory='hyperparam_tuning',
-    project_name='bird_classification')
+    if is_neema:
+        tuner = kt.RandomSearch(
+            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
+            objective='val_accuracy',
+            max_trials=5,  #Adjust if needed
+            executions_per_trial=3,
+            directory='D:\\DS\\hyperparam_tuning',
+            project_name='bird_classification')
+    else:
+        tuner = kt.RandomSearch(
+            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
+            objective='val_accuracy',
+            max_trials=5,  #Adjust if needed
+            executions_per_trial=3,
+            directory='hyperparam_tuning',
+            project_name='bird_classification')
     tuner.search(train_generator, epochs=10, validation_data=valid_generator)
     best_hps = tuner.get_best_models()[0]
 
