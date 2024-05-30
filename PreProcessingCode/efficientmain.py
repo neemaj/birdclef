@@ -20,11 +20,19 @@ RUN_NEEMA = True
 model_count= 0
 recheck_specs = False
 recheck_augment = False
+smaller_test = True
 
 if RUN_NEEMA:
-    path_to_created_specs = 'D:\\DS\\bird_chunked_specs'
-    path_to_created_augments = 'D:\\DS\\bird_augmented'
-    folder_path = 'C:\\Users\\njrav\\DS\\BirdCLEF\\birdclef-2024\\train_audio'
+    if smaller_test:
+        path_to_created_specs = 'D:\\Downloads\\train_audio_smaller\\bird_chunked_specs'
+        path_to_created_augments = 'D:\\Downloads\\train_audio_smaller\\bird_augmented'
+        folder_path = 'D:\\Downloads\\train_audio_smaller\\train_audio_smaller'
+        best_model_path = f'D:\\Downloads\\train_audio_smaller\\model{model_count}.keras'
+    else:
+        path_to_created_specs = 'D:\\DS\\bird_chunked_specs'
+        path_to_created_augments = 'D:\\DS\\bird_augmented'
+        folder_path = 'C:\\Users\\njrav\\DS\\BirdCLEF\\birdclef-2024\\train_audio'
+        best_model_path = f'D:\\DS\\model{model_count}.keras'
     pc = '\\'
 else:
     path_to_created_specs = '/Users/katiefrields/Desktop/BirdProject/BirdCLEF/PreProcessingCode/bird_chunked_specs'
@@ -235,6 +243,11 @@ def augment():
 def main():
     
     st = time.time()
+    # Set the number of intra-op parallelism threads
+    tf.config.threading.set_intra_op_parallelism_threads(2)
+
+    # Set the number of inter-op parallelism threads
+    tf.config.threading.set_inter_op_parallelism_threads(2)
 
     #don't spend work trying to get spectrograms if we aready have them
     if recheck_specs or not os.path.exists(path_to_created_specs):
