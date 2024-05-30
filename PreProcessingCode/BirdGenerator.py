@@ -7,7 +7,7 @@ from tensorflow import keras
 
 class Bird_Data_Generator(keras.utils.Sequence):
 
-    def __init__(self, file_paths, labels, freq_bins=256, chunk_length=512, batch_size=8, shuffle=True):
+    def __init__(self, file_paths, labels, freq_bins=256, chunk_length=512, batch_size=1, shuffle=True):
         self.file_paths = file_paths
         self.labels = labels
         self.batch_size = batch_size
