@@ -11,6 +11,7 @@ from BirdGenerator import *
 import keras_tuner as kt
 
 #constants
+is_neema_mac = True
 is_neema = True
 
 
@@ -219,10 +220,18 @@ def build_model(hp, input_shape, batch_size):
     
     
 def tune_hyperparameters(train_generator, valid_generator, input_shape):
-    if is_neema:
+    if is_neema_mac:
         tuner = kt.RandomSearch(
             lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
-            objective='val_accuracy',
+            objective='val_categorical_accuracy',
+            max_trials=5,  #Adjust if needed
+            executions_per_trial=3,
+            directory='/Volumes/Extreme SSD/DS/train_audio_smaller/hyperparam_tuning',
+            project_name='bird_classification')
+    elif is_neema:
+        tuner = kt.RandomSearch(
+            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
+            objective='val_categorical_accuracy',
             max_trials=5,  #Adjust if needed
             executions_per_trial=3,
             directory='D:\\DS\\hyperparam_tuning',
@@ -230,7 +239,7 @@ def tune_hyperparameters(train_generator, valid_generator, input_shape):
     else:
         tuner = kt.RandomSearch(
             lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
-            objective='val_accuracy',
+            objective='val_categorical_accuracy',
             max_trials=5,  #Adjust if needed
             executions_per_trial=3,
             directory='hyperparam_tuning',

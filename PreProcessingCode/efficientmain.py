@@ -1,9 +1,10 @@
-
-from CreatingSpectrograms import *
-from RetreivingAudioFiles import *
-from DataAugmentation import *
-from NoiseReduction import *
-import tensorflow_io as tfio
+NEEMA_MAC = True
+if not NEEMA_MAC:
+    from CreatingSpectrograms import *
+    from RetreivingAudioFiles import *
+    from DataAugmentation import *
+    from NoiseReduction import *
+    import tensorflow_io as tfio
 import matplotlib.pyplot as plt
 import time
 import random
@@ -14,15 +15,24 @@ import os
 from sklearn.model_selection import train_test_split
 from multiprocessing import Pool
 import json
+from pathlib import Path
+from sklearn.preprocessing import LabelEncoder
 
 #constants
+NEEMA_MAC = True
 RUN_NEEMA = True
 model_count= 0
 recheck_specs = False
 recheck_augment = False
 smaller_test = True
 
-if RUN_NEEMA:
+if NEEMA_MAC:
+    path_to_created_specs = '/Volumes/Extreme SSD/DS/train_audio_smaller/bird_chunked_specs'
+    path_to_created_augments = '/Volumes/Extreme SSD/DS/train_audio_smaller/bird_augmented'
+    folder_path = '/Volumes/Extreme SSD/DS/train_audio_smaller/train_audio_smaller'
+    best_model_path = f'/Volumes/Extreme SSD/DS/train_audio_smaller/model{model_count}.keras'
+    pc = '/'
+elif RUN_NEEMA:
     if smaller_test:
         path_to_created_specs = 'D:\\Downloads\\train_audio_smaller\\bird_chunked_specs'
         path_to_created_augments = 'D:\\Downloads\\train_audio_smaller\\bird_augmented'
@@ -47,6 +57,35 @@ chunk_length = 512
 noise_reduce_factor = 0.4
 debug_mode = False
 
+def get_path_label(folder_path, pc):
+    '''
+        Params:
+            file_path: string path to folder containing all bird audio files
+            
+        Returns:
+            dictionary where 
+              key = array of audio file paths corresponding to that bird
+              value = bird folder name as a string
+    '''
+    audio_dict = dict()
+    bird_folders = os.listdir(Path(folder_path))
+    
+    ltrain = LabelEncoder()
+
+    ltrain.fit(bird_folders)
+    
+    
+
+    # Iterate over files in directory
+    for bird_path in bird_folders:
+        #bird_list is a generator
+        bird_list = os.listdir(Path(folder_path + pc + bird_path))
+        for f in bird_list:
+            #audio_dict[f] = bird_path.name
+            
+            audio_dict[f] = ltrain.transform([bird_path])[0]
+        
+    return audio_dict
 
 
 def save_bird_spectrograms(file, bird_name, file_id):
