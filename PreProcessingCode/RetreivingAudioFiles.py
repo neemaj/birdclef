@@ -27,37 +27,6 @@ def get_bird_audio_dict(folder_path):
     return audio_dict
 
 
-def get_path_label(folder_path, pc):
-    '''
-        Params:
-            file_path: string path to folder containing all bird audio files
-            
-        Returns:
-            dictionary where 
-              key = array of audio file paths corresponding to that bird
-              value = bird folder name as a string
-    '''
-    audio_dict = dict()
-    bird_folders = os.listdir(Path(folder_path))
-    
-    ltrain = LabelEncoder()
-
-    ltrain.fit(bird_folders)
-    
-    
-
-    # Iterate over files in directory
-    for bird_path in bird_folders:
-        #bird_list is a generator
-        bird_list = os.listdir(Path(folder_path + pc + bird_path))
-        for f in bird_list:
-            #audio_dict[f] = bird_path.name
-            
-            audio_dict[f] = ltrain.transform([bird_path])[0]
-        
-    return audio_dict
-
-
 def get_audio_tensor(file_path):
     '''
         Params:
