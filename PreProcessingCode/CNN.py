@@ -182,13 +182,12 @@ def build_model(hp, input_shape, batch_size):
     model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
 
 
-    
     model.add(layers.Conv2D(
         filters=32,
         kernel_size=(3,3),
         activation='relu'))
 
-    model.add(layers.MaxPooling2D( pool_size=(2,2), strides = (2,1)))
+    model.add(layers.MaxPooling2D( pool_size=(5,5), strides = (2,1)))
 
 
     model.add(layers.Conv2D(
@@ -196,20 +195,20 @@ def build_model(hp, input_shape, batch_size):
         kernel_size=(3,3),
         activation='relu'))
 
-    model.add(layers.MaxPooling2D( pool_size=(2,2), strides = (2,1)))
+    model.add(layers.MaxPooling2D(pool_size=(5,5), strides = (2,1)))
 
         
     model.add(layers.Flatten())
 
     model.add(layers.Dense(
-        units=hp.Int('units', min_value=512, max_value=1024, step=256),
+        units=1024,
         activation='relu'))
 
 
     model.add(Dense(input_shape[0], activation='softmax'))
 
-    model.compile(
-        optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  loss='sparse_categorical_crossentropy')
+    model.compile(optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  
+        loss='sparse_categorical_crossentropy')
 
     return model
 

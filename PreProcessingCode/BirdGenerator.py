@@ -42,7 +42,6 @@ class Bird_Data_Generator(keras.utils.Sequence):
             X[i,] = np.load(path, allow_pickle=True)
             y[i] = self.labels[path.name]
 
-        print(f'shape is {X.shape}')
         return X, y
         
         
