@@ -120,7 +120,7 @@ def run_small_gen_model(X_train, X_valid, label_dict):
 
 
 
-def run_final_model_1(X_train, X_valid, label_dict):
+def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
     '''
     Params:
         X_train: 3D numpy arrays of all final spectrograms (each as its own 2D array) we're training on
@@ -161,10 +161,12 @@ def run_final_model_1(X_train, X_valid, label_dict):
 
     # Train model on dataset
     model.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer =keras.optimizers.Adam(learning_rate=.001),  
-        loss='sparse_categorical_crossentropy',  metrics=[keras.metrics.SparseCategoricalAccuracy()])
+                  metrics=[keras.metrics.SparseCategoricalAccuracy()])
 
     
-    model.fit(training_generator, batch_size =training_generator.batch_size,  validation_data=validation_generator)
+    model.fit(training_generator, batch_size =training_generator.batch_size,  validation_data=validation_generator, epochs = 10)
+
+    model.save(model_save_path)
 
 
 
