@@ -327,13 +327,12 @@ def main():
 
     #we will use train test split to split into spec paths for the validation and training data
     train_paths, valid_paths = train_test_split(file_path_list, test_size=0.10, random_state=42)
-    smaller_train_paths, extra_train_paths = train_test_split(train_paths, test_size=0.75, random_state=42)
 
-    X_train, X_valid = np.array(train_paths), np.array(valid_paths)
+    #smaller_train_paths, extra_train_paths = train_test_split(train_paths, test_size=0.999, random_state=42)
+
+    #X_smaller_train, X_extra_train, X_valid = np.array(train_paths), np.array(extra_train_paths), np.array(valid_paths)
     # we will then feed the X_augs_train and label dictionary to a generator to make the training generator
-    run_small_hp_model( train_paths, valid_paths, labels_dict, best_model_path)
-    global model_count
-    model_count+= 1
+    run_small_hp_model(train_paths, valid_paths, labels_dict, best_model_path)
     # we will then feed the X_augs_validation and label dictionary  to a generator to make the validation generator 
         
         
