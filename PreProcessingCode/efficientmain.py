@@ -317,9 +317,6 @@ def main():
     for bird_path in bird_folders:
         file_path_list.extend(list(Path(bird_path).glob('**/*.npy')))
    
-    
-   
-        
         
     #finish all the getting the the spectrograms
     #we will have path to the augmented spectrograms
