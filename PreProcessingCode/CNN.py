@@ -9,6 +9,7 @@ from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Dropout
 from BirdGenerator import *
 import keras_tuner as kt
+import json
 
 #constants
 is_neema_mac = True
@@ -132,9 +133,11 @@ def run_small_hp_model(X_train, X_valid, label_dict, path):
     training_generator = Bird_Data_Generator(X_train, label_dict, batch_size=3)
     validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size=3)
 
-    model = tune_hyperparameters(training_generator, validation_generator, np.array(X_train).shape)
+    hps = tune_hyperparameters(training_generator, validation_generator, np.array(X_train).shape)
 
-    keras.models.save_model(model, path)
+    with open(path, "w") as fp:
+        json.dump(hps.values, fp) 
+    #keras.models.save_model(model, path)
 
     
 
@@ -185,34 +188,29 @@ def build_model(hp, input_shape, batch_size):
     model = Sequential()
     model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
 
+ # Add convolutional layers with hyperparameter tuning
+    for i in range(hp.Int('num_conv_layers', 3, 5)):  # Number of convolutional layers (3 to 7)
 
-    model.add(layers.Conv2D(
-        filters=32,
-        kernel_size=(3,3),
-        activation='relu'))
-
-    model.add(layers.MaxPooling2D( pool_size=(5,5), strides = (2,1)))
-
-
-    model.add(layers.Conv2D(
-        filters=32,
-        kernel_size=(3,3),
-        activation='relu'))
-
-    model.add(layers.MaxPooling2D(pool_size=(5,5), strides = (2,1)))
-
+        model.add(layers.Conv2D(
+            filters=hp.Choice(f'filters_{i}', values=[64, 128, 256]),
+            kernel_size=hp.Choice(f'kernel_size_{i}', values=[3,5]),
+            activation='relu'))
+        
+        model.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,1)))
         
     model.add(layers.Flatten())
 
     model.add(layers.Dense(
-        units=1024,
+        units=hp.Int('units', min_value=512, max_value=1024, step=256),
         activation='relu'))
+
+
 
 
     model.add(Dense(input_shape[0], activation='softmax'))
 
     model.compile(optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  
-        loss='sparse_categorical_crossentropy')
+        loss='sparse_categorical_crossentropy',  metrics=[keras.metrics.SparseCategoricalAccuracy()])
 
     return model
 
@@ -244,7 +242,7 @@ def tune_hyperparameters(train_generator, valid_generator, input_shape):
             directory='hyperparam_tuning',
             project_name='bird_classification')
     tuner.search(train_generator, epochs=10, validation_data=valid_generator)
-    best_hps = tuner.get_best_models()[0]
+    best_hps = tuner.get_best_hyperparameters()[0]
 
     best_hps.summary()
     tuner.results_summary()
