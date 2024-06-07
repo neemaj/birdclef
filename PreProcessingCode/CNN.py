@@ -119,6 +119,57 @@ def run_small_gen_model(X_train, X_valid, label_dict):
 
 
 
+
+def run_final_model_1(X_train, X_valid, label_dict):
+    '''
+    Params:
+        X_train: 3D numpy arrays of all final spectrograms (each as its own 2D array) we're training on
+        y_train: corresponding labels (idk if they should be strings or ints) 
+        
+        label_dict: dictionary with path keys and label values
+        
+    Returns:
+
+    '''
+    # Generators
+    training_generator = Bird_Data_Generator(X_train, label_dict, batch_size=3)
+    validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size=3)
+
+    # Design model
+    model = Sequential()
+
+    model.add(keras.Input(batch_size = training_generator.batch_size, shape=(512, 256, 1)))
+
+    model.add(Conv2D(64, kernel_size = (5,5), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
+
+    model.add(Conv2D(128, kernel_size = (5,5), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
+
+    model.add(Conv2D(64, kernel_size = (3,3), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
+
+    model.add(Conv2D(512, kernel_size = (3,3), activation = "relu"))
+    model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
+    
+    
+    model.add(Flatten())
+    
+    model.add(Dense(512, activation='relu'))
+
+    model.add(Dense(np.array(X_train).shape[0], activation='softmax'))
+
+    # Train model on dataset
+    model.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer =keras.optimizers.Adam(learning_rate=.001),  
+        loss='sparse_categorical_crossentropy',  metrics=[keras.metrics.SparseCategoricalAccuracy()])
+
+    
+    model.fit(training_generator, batch_size =training_generator.batch_size,  validation_data=validation_generator)
+
+
+
+
+
 def run_small_hp_model(X_train, X_valid, label_dict, path):
     '''
     Params:
@@ -219,6 +270,8 @@ def build_model(hp, input_shape, batch_size):
         loss='sparse_categorical_crossentropy',  metrics=[keras.metrics.SparseCategoricalAccuracy()])
 
     return model
+
+
 
     
     
