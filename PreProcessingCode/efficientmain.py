@@ -28,9 +28,9 @@ smaller_test = True
 
 if NEEMA_MAC:
     path_to_created_specs = '/Volumes/Extreme SSD/DS/train_audio_smaller/bird_chunked_specs'
-    path_to_created_augments = '/Volumes/Extreme SSD/DS/train_audio_smaller/bird_augmented'
+    path_to_created_augments = '/Volumes/Extreme SSD/DS/hyper_augment'
     folder_path = '/Volumes/Extreme SSD/DS/train_audio_smaller/train_audio_smaller'
-    best_model_path = f'/Volumes/Extreme SSD/DS/train_audio_smaller/model{model_count}.txt'
+    best_model_path = f'/Volumes/Extreme SSD/DS/model{model_count}.txt'
     pc = '/'
 elif RUN_NEEMA:
     if smaller_test:
@@ -329,9 +329,9 @@ def main():
     train_paths, valid_paths = train_test_split(file_path_list, test_size=0.10, random_state=42)
     smaller_train_paths, extra_train_paths = train_test_split(train_paths, test_size=0.75, random_state=42)
 
-    #X_smaller_train, X_extra_train, X_valid = np.array(train_paths), np.array(extra_train_paths), np.array(valid_paths)
+    X_train, X_valid = np.array(train_paths), np.array(valid_paths)
     # we will then feed the X_augs_train and label dictionary to a generator to make the training generator
-    run_small_hp_model(smaller_train_paths, valid_paths, labels_dict, best_model_path)
+    run_small_hp_model( train_paths, valid_paths, labels_dict, best_model_path)
     global model_count
     model_count+= 1
     # we will then feed the X_augs_validation and label dictionary  to a generator to make the validation generator 

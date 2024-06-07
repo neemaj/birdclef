@@ -138,7 +138,6 @@ def run_small_hp_model(X_train, X_valid, label_dict, path):
     with open(path, "w") as fp:
         json.dump(hps.values, fp) 
     #keras.models.save_model(model, path)
-
     
 
     # Generators
@@ -189,14 +188,21 @@ def build_model(hp, input_shape, batch_size):
     model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
 
  # Add convolutional layers with hyperparameter tuning
-    for i in range(hp.Int('num_conv_layers', 3, 5)):  # Number of convolutional layers (3 to 7)
+    for i in range(3):  # Number of convolutional layers (3 to 7)
 
         model.add(layers.Conv2D(
-            filters=hp.Choice(f'filters_{i}', values=[64, 128, 256]),
+            filters=hp.Choice(f'filters_{i}', values=[64, 128]),
             kernel_size=hp.Choice(f'kernel_size_{i}', values=[3,5]),
             activation='relu'))
         
         model.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,1)))
+
+    model.add(layers.Conv2D(
+        filters=hp.Choice(f'filters_3', values=[64, 128, 256]),
+        kernel_size=hp.Choice(f'kernel_size_3', values=[3,5]),
+        activation='relu'))
+        
+    model.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,1)))
         
     model.add(layers.Flatten())
 
@@ -218,12 +224,12 @@ def build_model(hp, input_shape, batch_size):
     
 def tune_hyperparameters(train_generator, valid_generator, input_shape):
     if is_neema_mac:
-        tuner = kt.RandomSearch(
+        tuner = kt.Hyperband(
             lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
-            objective='val_categorical_accuracy',
-            max_trials=5,  #Adjust if needed
-            executions_per_trial=3,
-            directory='/Volumes/Extreme SSD/DS/train_audio_smaller/hyperparam_tuning',
+            objective='sparse_categorical_accuracy',
+            #max_trials=5,  #Adjust if needed
+            #executions_per_trial=1,
+            directory='/Volumes/Extreme SSD/DS/hyperparam_tuning',
             project_name='bird_classification')
     elif is_neema:
         tuner = kt.RandomSearch(
@@ -241,10 +247,9 @@ def tune_hyperparameters(train_generator, valid_generator, input_shape):
             executions_per_trial=3,
             directory='hyperparam_tuning',
             project_name='bird_classification')
-    tuner.search(train_generator, epochs=10, validation_data=valid_generator)
+    tuner.search(train_generator, epochs=1, validation_data=valid_generator)
     best_hps = tuner.get_best_hyperparameters()[0]
 
-    best_hps.summary()
     tuner.results_summary()
 
     return best_hps
