@@ -27,10 +27,10 @@ recheck_augment = False
 smaller_test = True
 
 if NEEMA_MAC:
-    path_to_created_specs = '/Volumes/Extreme SSD/DS/train_audio_smaller/bird_chunked_specs'
-    path_to_created_augments = '/Volumes/Extreme SSD/DS/bird_augmented'
-    folder_path = '/Volumes/Extreme SSD/DS/train_audio_smaller/train_audio_smaller'
-    best_model_path = f'/Volumes/Extreme SSD/DS/final_model.keras'
+    path_to_created_specs = '/Users/neema/Downloads/bird_chunked_specs'
+    path_to_created_augments = '/Users/neema/Downloads/five_birds'
+    folder_path = '/Users/neema/Downloads/train_audio_smaller'
+    best_model_path = f'/Users/neema/Downloads/final_model.keras'
     pc = '/'
 elif RUN_NEEMA:
     if smaller_test:
@@ -317,7 +317,7 @@ def main():
     for bird_path in bird_folders:
         file_path_list.extend(list(Path(bird_path).glob('**/*.npy')))
    
-        
+
     #finish all the getting the the spectrograms
     #we will have path to the augmented spectrograms
     #we have a folder of aug specs
@@ -326,7 +326,8 @@ def main():
     #get a list of all of those spec paths
 
     #we will use train test split to split into spec paths for the validation and training data
-    train_paths, valid_paths = train_test_split(file_path_list, test_size=0.10, random_state=42)
+    train_paths, valid_paths = train_test_split(file_path_list, test_size=0.20, random_state=42)
+
 
     #smaller_train_paths, extra_train_paths = train_test_split(train_paths, test_size=0.999, random_state=42)
 
