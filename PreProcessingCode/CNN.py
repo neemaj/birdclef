@@ -132,8 +132,8 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
 
     '''
     # Generators
-    training_generator = Bird_Data_Generator(X_train, label_dict, batch_size=3)
-    validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size=3)
+    training_generator = Bird_Data_Generator(X_train, label_dict, batch_size=8)
+    validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size=8)
 
     # Design model
     model = Sequential()
