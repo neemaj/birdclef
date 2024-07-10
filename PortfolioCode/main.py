@@ -1,0 +1,212 @@
+from CreatingSpectrograms import *
+from RetreivingAudioFiles import *
+from DataAugmentation import *
+from NoiseReduction import *
+import tensorflow_io as tfio
+import matplotlib.pyplot as plt
+import time
+import random
+from CNN import *
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+
+#constants
+folder_path = 'C:\\Users\\njrav\DS\\train_audio_smaller'
+freq_bins = 256
+chunk_length = 512
+noise_reduce_factor = 0.4
+debug_mode = False
+
+def get_spectrogram_dict():
+    '''
+    Method used to get dictionary of spectrograms from folder_path
+    '''
+    audio_dict = get_bird_audio_dict(folder_path)
+    spectrogram_dict = dict()
+
+    #get the audio tensors, then get the spectrograms
+    #loops through folders
+    for key in audio_dict:
+        spectrogram_dict[key] = list()
+        file_list = audio_dict[key]
+        for file in file_list:
+            tensor = get_audio_tensor(str(file))
+            spectrogram_dict[key].append(get_spectrogram(tensor))
+
+    return spectrogram_dict
+
+
+def separate_noise(spectrogram_dict):
+    '''
+    Method used to get noise and signal
+
+        Returns:
+            Dictionary of signal, and list of noise, as a tuple
+    '''
+    noise_list = list()
+    signals_dict = dict()
+
+    for key in spectrogram_dict:
+         signals_dict[key] = list()
+         spectrogram_list = spectrogram_dict[key]
+         for spec in spectrogram_list:
+              #min max scale
+              mm_spec = min_max_scale_spectrogram(spec).numpy()
+
+
+              #mask
+              signal_spec, noise_spec = mask(mm_spec)
+
+              #erode/dilate
+              binary_signal_spec = apply_binary_erosion_and_dilation_spectrogram(signal_spec)
+              signal_indicator = get_slices_indicator(binary_signal_spec)
+              signal_dilated_indicator = apply_binary_dilation_indicator(signal_indicator)
+
+
+
+              binary_noise_spec = apply_binary_erosion_and_dilation_spectrogram(noise_spec)
+              noise_indicator = get_slices_indicator(binary_noise_spec)
+              noise_dilated_indicator = apply_binary_dilation_indicator(noise_indicator)
+              noise_dilated_indicator_inverted = np.invert(noise_dilated_indicator)
+
+              #isolated
+              log_scale_spec = log_scale_spectrogram(spec).numpy()
+              isolated_signal_spec = get_isolated_spectrogram(signal_dilated_indicator, log_scale_spec)
+              isolated_noise_spec = get_isolated_spectrogram(noise_dilated_indicator_inverted, log_scale_spec)
+
+              #add to respective data structures
+              noise_list.append(isolated_noise_spec)
+              signals_dict[key].append(isolated_signal_spec)
+
+
+
+
+    return signals_dict, noise_list
+    
+def augment(signals_dict, noise_list):
+    '''
+    Method used to chunk, augment the data, and add in noise
+
+        Params:
+            signals_dict: dictionary of signal spectrograms
+            noise_list: list of noise spectrograms
+        Returns:
+            3d numpy array of all the spectrograms, 1d numpy array of all the labels 
+    '''
+    X_train = np.empty((1,chunk_length,freq_bins))
+    y_train = np.empty(1)
+
+    #first, handle noises
+    chunked_noise = list()
+    for noise in noise_list:
+        chunked_noise.extend(chunk_and_pad(noise, chunk_length))
+
+
+    
+    for key in signals_dict:
+        full_signals_list = signals_dict[key]
+
+        for spec in full_signals_list:
+
+            #chunk and pad
+            chunked_specs = chunk_and_pad(spec, chunk_length)
+            
+            shifted_specs = list()
+            for chunked_spec in chunked_specs:
+                #time shift
+                chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
+
+                #pitch shift
+                chunked_spec = pitch_shift(chunked_spec, random.randrange(128))
+
+                #add a random noise
+                noise_to_add_1 = reduce_amplitude(random.choice(chunked_noise), noise_reduce_factor)
+                noise_to_add_2 = reduce_amplitude(random.choice(chunked_noise), noise_reduce_factor)
+                noise_to_add_3 = reduce_amplitude(random.choice(chunked_noise), noise_reduce_factor)
+
+                if debug_mode:
+                    plot_abs_spectrogram(chunked_spec, 'chunked')
+                    plot_abs_spectrogram(noise_to_add_1, 'noise_to_add_1')
+                    plot_abs_spectrogram(noise_to_add_2, 'noise_to_add_2')
+                    plot_abs_spectrogram(noise_to_add_3, 'noise_to_add_3')
+                
+                chunked_spec = chunked_spec + noise_to_add_1 + noise_to_add_2 + noise_to_add_3
+
+                if debug_mode:
+                    plot_abs_spectrogram(chunked_spec, 'chunked_spec_post')
+                
+                #add as training data
+                chunked_spec = np.array([chunked_spec])
+                X_train = np.append(X_train, chunked_spec, axis=0)
+                y_train = np.append(y_train, key)
+            
+
+    return (np.delete(X_train, (0), axis=0), np.delete(y_train, 0))
+    
+
+    
+     
+
+def preprocess():
+    '''
+    Method used for preprocessing, returns X_train and y_train
+    '''
+    spectrogram_dict = get_spectrogram_dict()
+    signals_dict, noise_list = separate_noise(spectrogram_dict)
+    X_train, y_train = augment(signals_dict, noise_list)
+
+    #testing
+    if debug_mode:
+        print(np.shape(X_train))
+        print(np.shape(y_train))
+        plot_abs_spectrogram(X_train[2], 'Final Test')
+        print(y_train[2])
+
+    return X_train, y_train
+
+    
+
+
+
+
+
+def main():
+    st = time.time()
+    ##X, y = preprocess()
+
+    #finish all the getting the the spectrograms
+    # we will have path to the augmented spectrgrams
+
+	#transofrm the augmented specs folder into a list of aug spec paths
+	
+	# X_augs = list of augmented specs path
+	
+
+	# we will label encode y_augs
+	
+	#we will use train test split to split X_augs and y_augs into training and validation data
+
+	# we will then feed the X_augs_train and y_augs_train to a generator to make the training generator
+	# we will then feed the X_augs_validation and y_augs_validation to a generator to make the validation generator
+	
+    
+    ltrain = LabelEncoder()
+    ltrain.fit(y)
+    encoded_y = ltrain.transform(y)
+    
+    X_train, X_valid, y_train, y_valid =  train_test_split(X, encoded_y, test_size = .25, train_size =.75)
+    
+    print(np.shape(X_train))
+    print(np.shape(y_train))
+    print(np.shape(X_valid))
+    print(np.shape(y_valid))
+    run_small_model(X_train, y_train, X_valid, y_valid)
+    et = time.time()
+
+    if debug_mode:
+        print("Time it took:")
+        print(et-st)
+
+
+if __name__ == "__main__":
+	main()
