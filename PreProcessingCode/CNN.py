@@ -120,7 +120,7 @@ def run_small_gen_model(X_train, X_valid, label_dict):
 
 
 
-def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
+def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_classes):
     '''
     Params:
         X_train: 3D numpy arrays of all final spectrograms (each as its own 2D array) we're training on
@@ -157,12 +157,11 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
     
     model.add(Dense(512, activation='relu'))
 
-    model.add(Dense(np.array(X_train).shape[0], activation='softmax'))
+    model.add(Dense(number_of_classes, activation='softmax'))
 
     # Train model on dataset
     model.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer =keras.optimizers.Adam(learning_rate=.001),  
                   metrics=[keras.metrics.SparseCategoricalAccuracy()])
-
     
     model.fit(training_generator, batch_size =training_generator.batch_size,  validation_data=validation_generator, epochs = 10)
 
