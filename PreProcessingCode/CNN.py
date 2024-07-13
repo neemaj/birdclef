@@ -278,13 +278,14 @@ def build_model(hp, input_shape, batch_size, number_of_classes):
     
 def tune_hyperparameters(train_generator, valid_generator, input_shape, number_of_classes):
     if is_neema_mac:
+        stop_early = keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=5)
         tuner = kt.Hyperband(
             lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size, number_of_classes=number_of_classes),
-            objective='sparse_categorical_accuracy',
+            objective='val_sparse_categorical_accuracy',
             #max_trials=5,  #Adjust if needed
             #executions_per_trial=1,
             directory='/Volumes/home/SanDisk/DS/hyperparam_tuning',
-            project_name='bird_classification')
+            project_name='validation_bird_classification')
     elif is_neema:
         tuner = kt.RandomSearch(
             lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size,number_of_classes=number_of_classes),
@@ -301,21 +302,9 @@ def tune_hyperparameters(train_generator, valid_generator, input_shape, number_o
             executions_per_trial=3,
             directory='hyperparam_tuning',
             project_name='bird_classification')
-    tuner.search(train_generator, epochs=1, validation_data=valid_generator)
+    tuner.search(train_generator, epochs=1, validation_data=valid_generator, callbacks=[stop_early])
     best_hps = tuner.get_best_hyperparameters()[0]
 
     tuner.results_summary()
 
     return best_hps
-
-    
-
-
-
-
-
-
-
-'''
-use_multiprocessing=True,
-workers=6'''
