@@ -79,7 +79,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
 
 def run_small_hp_model(X_train, X_valid, label_dict, model_output_path, number_of_classes, batch_size):
     '''
-    calls hyperparameter tuning functions and outputs results in json file
+    Calls hyperparameter tuning functions and outputs results in json file
     
     Params:
         X_train: list of paths to npy files corresponding to training spectrograms
@@ -103,52 +103,19 @@ def run_small_hp_model(X_train, X_valid, label_dict, model_output_path, number_o
 
     with open(model_output_path, "w") as fp:
         json.dump(hps.values, fp) 
-    #keras.models.save_model(model, path)
     
 
-    # Generators
-    
-
-'''
-def build_model(hp, input_shape, batch_size):
-    # Design model
-    model = Sequential()
-    model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
-    
-    
-    model.add(layers.Dropout(rate=hp.Float(f'dropout_rate', min_value=0, max_value=0.2, step=0.2)))
 
 
-    # Add convolutional layers with hyperparameter tuning
-    for i in range(hp.Int('num_conv_layers', 3, 5)):  # Number of convolutional layers (3 to 7)
 
-        model.add(layers.Conv2D(
-            filters=hp.Choice(f'filters_{i}', values=[32, 64, 128, 256, 512]),
-            kernel_size=hp.Choice(f'kernel_size_{i}', values=[3,4,5]),
-            activation='relu'))
-        
-        model.add(layers.MaxPooling2D(
-            pool_size=hp.Choice(f'pool_size_{i}', values=[1, 2,3]),
-            strides=hp.Choice(f'stride_{i}', values=[1,2,3])))
-        
-        
-    model.add(layers.Flatten())
-
-    model.add(layers.Dense(
-        units=hp.Int('units', min_value=512, max_value=1024, step=256),
-        activation='relu'))
-    
-    model.add(layers.Dropout(rate=hp.Float('dropout_dense', min_value=0, max_value=0.3, step=0.3)))
-    model.add(Dense(input_shape[0], activation='softmax'))
-
-    model.compile(
-       optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  loss='sparse_categorical_crossentropy')
-
-    return model
-    
-'''
 
 def build_model(hp, input_shape, batch_size, number_of_classes):
+    '''
+        Params:
+            hp:
+        
+        Returns:
+    '''
     # Design model
     model = Sequential()
     model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
