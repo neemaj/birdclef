@@ -19,7 +19,7 @@ is_neema = True
 
 
 
-def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_classes, batch_size):
+def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_classes, batch_size, chunk_shape =(512, 256, 1)):
     '''
     Params:
         X_train: list of paths to npy files corresponding to training spectrograms
@@ -43,7 +43,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
     # Buildling CNN
     model = Sequential()
 
-    model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
+    model.add(keras.Input(batch_size = batch_size, chunk_shape))
 
     model.add(Conv2D(128, kernel_size = (5,5), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
