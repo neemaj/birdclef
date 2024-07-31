@@ -99,7 +99,7 @@ def run_small_hp_model(X_train, X_valid, label_dict, model_output_path, number_o
     training_generator = Bird_Data_Generator(X_train, label_dict, batch_size)
     validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size)
 
-    hps = tune_hyperparameters(training_generator, validation_generator, np.array(X_train).shape,number_of_classes)
+    hps = tune_hyperparameters(training_generator, validation_generator, number_of_classes)
 
     with open(model_output_path, "w") as fp:
         json.dump(hps.values, fp) 
@@ -109,10 +109,10 @@ def run_small_hp_model(X_train, X_valid, label_dict, model_output_path, number_o
 
 
 
-def build_model(hp, input_shape, batch_size, number_of_classes):
+def build_model(hp, batch_size, number_of_classes):
     '''
         Params:
-            hp:
+            hp: Hyperparameter object from keras class
         
         Returns:
     '''
@@ -157,11 +157,11 @@ def build_model(hp, input_shape, batch_size, number_of_classes):
 
     
     
-def tune_hyperparameters(train_generator, valid_generator, input_shape, number_of_classes):
+def tune_hyperparameters(train_generator, valid_generator, number_of_classes):
     if is_neema_mac:
         stop_early = keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=5)
         tuner = kt.Hyperband(
-            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size, number_of_classes=number_of_classes),
+            lambda hp: build_model(hp,  batch_size =train_generator.batch_size, number_of_classes=number_of_classes),
             objective='val_sparse_categorical_accuracy',
             #max_trials=5,  #Adjust if needed
             #executions_per_trial=1,
@@ -169,7 +169,7 @@ def tune_hyperparameters(train_generator, valid_generator, input_shape, number_o
             project_name='validation_bird_classification')
     elif is_neema:
         tuner = kt.RandomSearch(
-            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size,number_of_classes=number_of_classes),
+            lambda hp: build_model(hp,  batch_size =train_generator.batch_size,number_of_classes=number_of_classes),
             objective='val_categorical_accuracy',
             max_trials=5,  #Adjust if needed
             executions_per_trial=3,
@@ -177,7 +177,7 @@ def tune_hyperparameters(train_generator, valid_generator, input_shape, number_o
             project_name='bird_classification')
     else:
         tuner = kt.RandomSearch(
-            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size,number_of_classes=number_of_classes),
+            lambda hp: build_model(hp,  batch_size =train_generator.batch_size,number_of_classes=number_of_classes),
             objective='val_categorical_accuracy',
             max_trials=5,  #Adjust if needed
             executions_per_trial=3,
