@@ -77,7 +77,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
 
 
 
-def run_small_hp_model(X_train, X_valid, label_dict, path, number_of_classes):
+def run_small_hp_model(X_train, X_valid, label_dict, model_output_path, number_of_classes, batch_size):
     '''
     calls hyperparameter tuning functions and outputs results in json file
     
@@ -85,19 +85,23 @@ def run_small_hp_model(X_train, X_valid, label_dict, path, number_of_classes):
         X_train: list of paths to npy files corresponding to training spectrograms
         X_valid: list of paths to npy files corresponding to validation spectrograms
 
-        
-        
-        label_dict: dictionary with path keys and label values
+        label_dict: Dictionary mapping file paths to one-hot sparse encoded label values
+
+        model_save_path: where to save the model to
+
+        number_of_classes: number of classes (species of birds)
+
+        batch_size: batch size for generators
         
     Returns:
 
     '''
-    training_generator = Bird_Data_Generator(X_train, label_dict, batch_size=8)
-    validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size=8)
+    training_generator = Bird_Data_Generator(X_train, label_dict, batch_size)
+    validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size)
 
     hps = tune_hyperparameters(training_generator, validation_generator, np.array(X_train).shape,number_of_classes)
 
-    with open(path, "w") as fp:
+    with open(model_output_path, "w") as fp:
         json.dump(hps.values, fp) 
     #keras.models.save_model(model, path)
     
