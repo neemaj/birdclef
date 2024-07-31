@@ -26,6 +26,7 @@ recheck_specs = False
 recheck_augment = False
 smaller_test = True
 number_of_classes = 5
+batch_size = 8
 
 if NEEMA_MAC:
     path_to_created_specs = '/Users/neema/Downloads/bird_chunked_specs'
@@ -337,7 +338,7 @@ def main():
 
 
     ###RUN THIS CODE TO RUN THE MODEL ON THE FINAL DATA SET###
-    run_final_model_1(train_paths, valid_paths, labels_dict, best_model_path, number_of_classes) 
+    run_final_model_1(train_paths, valid_paths, labels_dict, best_model_path, number_of_classes, batch_size) 
     ###RUN THIS CODE TO RUN THE MODEL ON THE FINAL DATA SET###
 
     #run_small_hp_model(train_paths, valid_paths, labels_dict, '/Volumes/home/SanDisk/DS/Jul11.json', number_of_classes)
