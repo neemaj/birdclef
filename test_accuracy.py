@@ -1,5 +1,5 @@
-model_path = '/Users/neema/Downloads/final_model.keras'
-test_path = '/Users/neema/Downloads/five_birds_test'
+model_path = '/Users/neema/Downloads/Jul18.keras'
+test_path = '/Users/neema/Downloads/five_birds'
 pc = '/'
 
 import tensorflow as tf

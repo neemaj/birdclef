@@ -140,7 +140,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
 
     model.add(keras.Input(batch_size = training_generator.batch_size, shape=(512, 256, 1)))
 
-    model.add(Conv2D(64, kernel_size = (5,5), activation = "relu"))
+    model.add(Conv2D(128, kernel_size = (5,5), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
 
     model.add(Conv2D(128, kernel_size = (5,5), activation = "relu"))
@@ -149,7 +149,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
     model.add(Conv2D(64, kernel_size = (3,3), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
 
-    model.add(Conv2D(512, kernel_size = (3,3), activation = "relu"))
+    model.add(Conv2D(256, kernel_size = (3,3), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
     
     
