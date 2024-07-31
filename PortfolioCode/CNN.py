@@ -1,4 +1,4 @@
-from tensorflow import keras
+ from tensorflow import keras
 from tensorflow.keras import Sequential
 from tensorflow.keras import metrics
 from tensorflow.keras import layers
@@ -21,6 +21,8 @@ is_neema = True
 
 def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_classes, batch_size, chunk_shape =(512, 256, 1)):
     '''
+    Builds and runs our CNN and saves the model
+    
     Params:
         X_train: list of paths to npy files corresponding to training spectrograms
         X_valid: list of paths to npy files corresponding to validation spectrograms
@@ -33,14 +35,14 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
 
         batch_size: batch size for generators
         
-    Returns:
+    
 
     '''
     #Generators are used to give a batch of npy arrays for stochastic gradient descent function
     training_generator = Bird_Data_Generator(X_train, label_dict, batch_size)
     validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size)
 
-    # Buildling CNN
+    # Buildling CNN based on hyperparamter tuning
     model = Sequential()
 
     model.add(keras.Input(batch_size = batch_size, chunk_shape))
@@ -56,7 +58,6 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
 
     model.add(Conv2D(256, kernel_size = (3,3), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
-    
     
     model.add(Flatten())
     
