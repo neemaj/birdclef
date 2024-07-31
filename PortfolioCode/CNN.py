@@ -45,7 +45,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
     # Buildling CNN based on hyperparamter tuning
     model = Sequential()
 
-    model.add(keras.Input(batch_size = batch_size, chunk_shape))
+    model.add(keras.Input(batch_size, chunk_shape))
 
     model.add(Conv2D(128, kernel_size = (5,5), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
@@ -79,6 +79,8 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
 
 def run_small_hp_model(X_train, X_valid, label_dict, path, number_of_classes):
     '''
+    calls Hyperparameter tuning functions and outputs results in json file
+    
     Params:
         X_train: 3D numpy arrays of all final spectrograms (each as its own 2D array) we're training on
         y_train: corresponding labels (idk if they should be strings or ints) 
