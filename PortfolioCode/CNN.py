@@ -1,4 +1,4 @@
- from tensorflow import keras
+from tensorflow import keras
 from tensorflow.keras import Sequential
 from tensorflow.keras import metrics
 from tensorflow.keras import layers
@@ -79,11 +79,13 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_c
 
 def run_small_hp_model(X_train, X_valid, label_dict, path, number_of_classes):
     '''
-    calls Hyperparameter tuning functions and outputs results in json file
+    calls hyperparameter tuning functions and outputs results in json file
     
     Params:
-        X_train: 3D numpy arrays of all final spectrograms (each as its own 2D array) we're training on
-        y_train: corresponding labels (idk if they should be strings or ints) 
+        X_train: list of paths to npy files corresponding to training spectrograms
+        X_valid: list of paths to npy files corresponding to validation spectrograms
+
+        
         
         label_dict: dictionary with path keys and label values
         
