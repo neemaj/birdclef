@@ -92,8 +92,6 @@ def run_small_hp_model(X_train, X_valid, label_dict, model_output_path, number_o
         number_of_classes: number of classes (species of birds)
 
         batch_size: batch size for generators
-        
-    Returns:
 
     '''
     training_generator = Bird_Data_Generator(X_train, label_dict, batch_size)
@@ -105,53 +103,6 @@ def run_small_hp_model(X_train, X_valid, label_dict, model_output_path, number_o
         json.dump(hps.values, fp) 
     
 
-
-
-
-
-def build_model(hp, batch_size, number_of_classes):
-    '''
-        Params:
-            hp: Hyperparameter object from keras class
-        
-        Returns:
-    '''
-    # Design model
-    model = Sequential()
-    model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
-
- # Add convolutional layers with hyperparameter tuning
-    for i in range(3):  # Number of convolutional layers (3 to 7)
-
-        model.add(layers.Conv2D(
-            filters=hp.Choice(f'filters_{i}', values=[64, 128]),
-            kernel_size=hp.Choice(f'kernel_size_{i}', values=[3,5]),
-            activation='relu'))
-        
-        model.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,1)))
-
-    model.add(layers.Conv2D(
-        filters=hp.Choice(f'filters_3', values=[64, 128, 256]),
-        kernel_size=hp.Choice(f'kernel_size_3', values=[3,5]),
-        activation='relu'))
-        
-    model.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,1)))
-        
-    model.add(layers.Flatten())
-
-    model.add(layers.Dense(
-        units=hp.Int('units', min_value=128, max_value=512, step=128),
-        activation='relu'))
-
-
-
-
-    model.add(Dense(number_of_classes, activation='softmax'))
-
-    model.compile(optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  
-        loss='sparse_categorical_crossentropy',  metrics=[keras.metrics.SparseCategoricalAccuracy()])
-
-    return model
 
 
 
@@ -189,3 +140,49 @@ def tune_hyperparameters(train_generator, valid_generator, number_of_classes):
     tuner.results_summary()
 
     return best_hps
+
+def build_model(hp, batch_size, number_of_classes):
+    '''
+        Params:
+            hp: Hyperparameter object from keras class
+            number_of_classes: number of classes (species of birds)
+            batch_size: batch size for generators
+        
+        Returns: current of hyperparameter tuning model
+            
+    '''
+    # Design model
+    model = Sequential()
+    model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
+
+ # Add convolutional layers with hyperparameter tuning
+    for i in range(3):  # Number of convolutional layers (3 to 7)
+        model.add(layers.Conv2D(
+            filters=hp.Choice(f'filters_{i}', values=[64, 128]),
+            kernel_size=hp.Choice(f'kernel_size_{i}', values=[3,5]),
+            activation='relu'))
+        
+        model.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,1)))
+
+    model.add(layers.Conv2D(
+        filters=hp.Choice(f'filters_3', values=[64, 128, 256]),
+        kernel_size=hp.Choice(f'kernel_size_3', values=[3,5]),
+        activation='relu'))
+        
+    model.add(layers.MaxPooling2D(pool_size=(2,2), strides=(2,1)))
+        
+    model.add(layers.Flatten())
+
+    model.add(layers.Dense(
+        units=hp.Int('units', min_value=128, max_value=512, step=128),
+        activation='relu'))
+
+
+
+
+    model.add(Dense(number_of_classes, activation='softmax'))
+
+    model.compile(optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  
+        loss='sparse_categorical_crossentropy',  metrics=[keras.metrics.SparseCategoricalAccuracy()])
+
+    return model
