@@ -120,7 +120,7 @@ def run_small_gen_model(X_train, X_valid, label_dict):
 
 
 
-def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
+def run_final_model_1(X_train, X_valid, label_dict, model_save_path, number_of_classes):
     '''
     Params:
         X_train: 3D numpy arrays of all final spectrograms (each as its own 2D array) we're training on
@@ -140,7 +140,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
 
     model.add(keras.Input(batch_size = training_generator.batch_size, shape=(512, 256, 1)))
 
-    model.add(Conv2D(64, kernel_size = (5,5), activation = "relu"))
+    model.add(Conv2D(128, kernel_size = (5,5), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
 
     model.add(Conv2D(128, kernel_size = (5,5), activation = "relu"))
@@ -149,7 +149,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
     model.add(Conv2D(64, kernel_size = (3,3), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
 
-    model.add(Conv2D(512, kernel_size = (3,3), activation = "relu"))
+    model.add(Conv2D(256, kernel_size = (3,3), activation = "relu"))
     model.add(MaxPooling2D(pool_size=(2, 2), strides=(2,1)))
     
     
@@ -157,12 +157,11 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
     
     model.add(Dense(512, activation='relu'))
 
-    model.add(Dense(np.array(X_train).shape[0], activation='softmax'))
+    model.add(Dense(number_of_classes, activation='softmax'))
 
     # Train model on dataset
     model.compile(loss=keras.losses.SparseCategoricalCrossentropy(), optimizer =keras.optimizers.Adam(learning_rate=.001),  
                   metrics=[keras.metrics.SparseCategoricalAccuracy()])
-
     
     model.fit(training_generator, batch_size =training_generator.batch_size,  validation_data=validation_generator, epochs = 10)
 
@@ -172,7 +171,7 @@ def run_final_model_1(X_train, X_valid, label_dict, model_save_path):
 
 
 
-def run_small_hp_model(X_train, X_valid, label_dict, path):
+def run_small_hp_model(X_train, X_valid, label_dict, path, number_of_classes):
     '''
     Params:
         X_train: 3D numpy arrays of all final spectrograms (each as its own 2D array) we're training on
@@ -183,10 +182,10 @@ def run_small_hp_model(X_train, X_valid, label_dict, path):
     Returns:
 
     '''
-    training_generator = Bird_Data_Generator(X_train, label_dict, batch_size=3)
-    validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size=3)
+    training_generator = Bird_Data_Generator(X_train, label_dict, batch_size=8)
+    validation_generator = Bird_Data_Generator(X_valid, label_dict, batch_size=8)
 
-    hps = tune_hyperparameters(training_generator, validation_generator, np.array(X_train).shape)
+    hps = tune_hyperparameters(training_generator, validation_generator, np.array(X_train).shape,number_of_classes)
 
     with open(path, "w") as fp:
         json.dump(hps.values, fp) 
@@ -235,7 +234,7 @@ def build_model(hp, input_shape, batch_size):
     
 '''
 
-def build_model(hp, input_shape, batch_size):
+def build_model(hp, input_shape, batch_size, number_of_classes):
     # Design model
     model = Sequential()
     model.add(keras.Input(batch_size = batch_size, shape=(512, 256, 1)))
@@ -260,13 +259,13 @@ def build_model(hp, input_shape, batch_size):
     model.add(layers.Flatten())
 
     model.add(layers.Dense(
-        units=hp.Int('units', min_value=512, max_value=1024, step=256),
+        units=hp.Int('units', min_value=128, max_value=512, step=128),
         activation='relu'))
 
 
 
 
-    model.add(Dense(input_shape[0], activation='softmax'))
+    model.add(Dense(number_of_classes, activation='softmax'))
 
     model.compile(optimizer =keras.optimizers.Adam(hp.Choice('learning_rate', values=[1e-2, 1e-3])),  
         loss='sparse_categorical_crossentropy',  metrics=[keras.metrics.SparseCategoricalAccuracy()])
@@ -277,18 +276,19 @@ def build_model(hp, input_shape, batch_size):
 
     
     
-def tune_hyperparameters(train_generator, valid_generator, input_shape):
+def tune_hyperparameters(train_generator, valid_generator, input_shape, number_of_classes):
     if is_neema_mac:
+        stop_early = keras.callbacks.EarlyStopping(monitor='val_sparse_categorical_accuracy', patience=5)
         tuner = kt.Hyperband(
-            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
-            objective='sparse_categorical_accuracy',
+            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size, number_of_classes=number_of_classes),
+            objective='val_sparse_categorical_accuracy',
             #max_trials=5,  #Adjust if needed
             #executions_per_trial=1,
-            directory='/Volumes/Extreme SSD/DS/hyperparam_tuning',
-            project_name='bird_classification')
+            directory='/Volumes/home/SanDisk/DS/hyperparam_tuning',
+            project_name='validation_bird_classification')
     elif is_neema:
         tuner = kt.RandomSearch(
-            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
+            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size,number_of_classes=number_of_classes),
             objective='val_categorical_accuracy',
             max_trials=5,  #Adjust if needed
             executions_per_trial=3,
@@ -296,27 +296,15 @@ def tune_hyperparameters(train_generator, valid_generator, input_shape):
             project_name='bird_classification')
     else:
         tuner = kt.RandomSearch(
-            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size),
+            lambda hp: build_model(hp, input_shape, batch_size =train_generator.batch_size,number_of_classes=number_of_classes),
             objective='val_categorical_accuracy',
             max_trials=5,  #Adjust if needed
             executions_per_trial=3,
             directory='hyperparam_tuning',
             project_name='bird_classification')
-    tuner.search(train_generator, epochs=1, validation_data=valid_generator)
+    tuner.search(train_generator, epochs=1, validation_data=valid_generator, callbacks=[stop_early])
     best_hps = tuner.get_best_hyperparameters()[0]
 
     tuner.results_summary()
 
     return best_hps
-
-    
-
-
-
-
-
-
-
-'''
-use_multiprocessing=True,
-workers=6'''

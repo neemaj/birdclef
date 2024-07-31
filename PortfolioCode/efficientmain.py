@@ -25,12 +25,13 @@ model_count= 0
 recheck_specs = False
 recheck_augment = False
 smaller_test = True
+number_of_classes = 5
 
 if NEEMA_MAC:
     path_to_created_specs = '/Users/neema/Downloads/bird_chunked_specs'
     path_to_created_augments = '/Users/neema/Downloads/five_birds'
     folder_path = '/Users/neema/Downloads/train_audio_smaller'
-    best_model_path = f'/Users/neema/Downloads/final_model.keras'
+    best_model_path = f'/Users/neema/Downloads/Jul18.keras'
     pc = '/'
 elif RUN_NEEMA:
     if smaller_test:
@@ -333,7 +334,16 @@ def main():
 
     #X_smaller_train, X_extra_train, X_valid = np.array(train_paths), np.array(extra_train_paths), np.array(valid_paths)
     # we will then feed the X_augs_train and label dictionary to a generator to make the training generator
-    run_final_model_1(train_paths, valid_paths, labels_dict, best_model_path)
+
+
+    ###RUN THIS CODE TO RUN THE MODEL ON THE FINAL DATA SET###
+    run_final_model_1(train_paths, valid_paths, labels_dict, best_model_path, number_of_classes) 
+    ###RUN THIS CODE TO RUN THE MODEL ON THE FINAL DATA SET###
+
+    #run_small_hp_model(train_paths, valid_paths, labels_dict, '/Volumes/home/SanDisk/DS/Jul11.json', number_of_classes)
+
+
+
     # we will then feed the X_augs_validation and label dictionary  to a generator to make the validation generator 
         
         
