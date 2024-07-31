@@ -169,7 +169,7 @@ def augment_bird_file(chunked_spec_path, key, file_id, noise_path_list):
         #load in the npy
         chunked_spec = np.load(chunked_spec_path, allow_pickle=True)
     
-        if chunked_spec.shape == (512,256):
+        if chunked_spec.shape == (chunk_length,freq_bins):
             #time shift
             chunked_spec = time_shift(chunked_spec, random.randrange(chunk_length))
         
@@ -186,7 +186,7 @@ def augment_bird_file(chunked_spec_path, key, file_id, noise_path_list):
                 noise_to_add_path_3 = random.choice(noise_path_list)
                 noise_to_add_3 = reduce_amplitude(np.load(noise_to_add_path_3, allow_pickle=True), noise_reduce_factor)
     
-                if noise_to_add_1.shape == (512,256) and noise_to_add_2.shape == (512,256) and noise_to_add_3.shape == (512,256):
+                if noise_to_add_1.shape == (chunk_length,freq_bins) and noise_to_add_2.shape == (chunk_length,freq_bins) and noise_to_add_3.shape == (chunk_length,freq_bins):
                     break
         
             if debug_mode:
