@@ -9,12 +9,13 @@ Our approach included:
 
 
 ## Table Of Contents
-  -(Dataset)(#dataset)
+- [Dataset](#dataset)
 
-## DataSet
-Our data  was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
+## Dataset
+Our data was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
 More info can be found here:
-Kaggle competition: https://www.kaggle.com/competitions/birdclef-2024/overview 
+Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview](https://www.kaggle.com/competitions/birdclef-2024/overview)
+
 
 
 ## Files for each step
