@@ -9,7 +9,7 @@ Our approach included:
 
 
 ## Table Of Contents
-  -[Dataset][#dataset]
+  -(Dataset)(#dataset)
 
 ## DataSet
 Our data  was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
