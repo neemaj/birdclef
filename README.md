@@ -16,6 +16,9 @@ More info can be found here:
 Kaggle competition: https://www.kaggle.com/competitions/birdclef-2024/overview 
 
 
+## Files for each step
+
+
 ##  Preprocessing
 
 - signal/noise seperation
