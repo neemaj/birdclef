@@ -14,6 +14,8 @@ Our approach included:
 Our data  was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
 More info can be found here:
 Kaggle competition: https://www.kaggle.com/competitions/birdclef-2024/overview 
+
+
 ##  Preprocessing
 
 - signal/noise seperation
