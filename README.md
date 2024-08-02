@@ -11,8 +11,9 @@ Our approach included:
 ## Table Of Contents
 - [Dataset](#dataset)
 - [Preprocessing](#preprocessing)
-- [DataAugmentation(#data-augmentation)
-- 
+- [Data Augmentation](#data-augmentation)
+- [Results](#results)
+- [Improvements](#improvments)
 
 ## Dataset
 Our data was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
@@ -26,7 +27,7 @@ Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview]
 
 ##  Preprocessing
 
-- signal/noise seperation
+- signal/noise separation
 - Chunk Division
 
 ## Data Augmentation 
