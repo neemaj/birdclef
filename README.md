@@ -26,6 +26,7 @@ Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview]
 - [Preprocessing](https://github.com/NeemaJ/BirdCLEF/tree/24f35caf402121c3238eb0dae2cf49cb92c70a81/PreProcessingCode)
 - [CNN](https://github.com/NeemaJ/BirdCLEF/blob/f42915c6f4ab40295a891dcf2a1a576fe4a6e0e0/PreProcessingCode/CNN.py)
 - [Spectograms](https://github.com/NeemaJ/BirdCLEF/blob/a1e5dbf8a7c2b12c5545801b47eb784638a90152/PreProcessingCode/CreatingSpectrograms.py)
+- [Data Augmentation](https://github.com/NeemaJ/BirdCLEF/blob/fe6eeb7da4fc249a3e0625111098da92f996805e/PreProcessingCode/DataAugmentation.py)
 
 ##  Preprocessing
 
