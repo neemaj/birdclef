@@ -31,6 +31,12 @@ Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview]
 - [HyperParameter Tuning](https://github.com/NeemaJ/BirdCLEF/tree/2e6f1df785ef8c3e69d5ad0e217cd13494272a99/hyperparam_tuning/bird_classification)
 - [Train Small Audio data](https://github.com/NeemaJ/BirdCLEF/tree/109f21bd1a687658eb23c4d71ba4950ad002d64d/train_audio_smaller)
 
+
+
+## Files for each step
+![Data_Pipeline](https://github.com/user-attachments/assets/cd8f2e86-d8dd-42ee-b8ce-9639279e44f2)
+
+
 ##  Preprocessing
 
 - signal/noise separation
