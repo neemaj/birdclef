@@ -33,7 +33,7 @@ Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview]
 
 
 
-## Files for each step
+## Data Pipeline
 ![Data_Pipeline](https://github.com/user-attachments/assets/cd8f2e86-d8dd-42ee-b8ce-9639279e44f2)
 
 
