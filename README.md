@@ -38,7 +38,7 @@ Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview]
 
 
 ##  Preprocessing
-
+To divide the sound file into signal and noise parts, we first computed a spectrogram of the entire file using a short-time Fourier transform (STFT).
 - signal/noise separation
 - Chunk Division
 
