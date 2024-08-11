@@ -17,6 +17,7 @@ Our approach included:
 
 ## Dataset
 Our data was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
+
 Our primary issue was finding a method to convert audio into an image that could be processed by our CNN. To achieve this, we transformed the audio data into spectrograms while making sure to isolate the bird calls. We also standardized the spectrograms into the same size and amplitude scale. We accounted for background noise and enhanced our model by layering different types of background noise and applying pitch and time shifting to the audio. 
 
 More info can be found here:
@@ -41,6 +42,7 @@ Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview]
 
 
 ##  Preprocessing
+
 To divide the sound file into signal and noise parts, we first computed a spectrogram of the entire file using a short-time Fourier transform (STFT). For the signal, we applied binary filters to remove noise, created an indicator vector that marks the signal interval, and identified pixels from the spectrogram that were three times the row and column median. A similar process is used for noise. The threshold is slightly lower with 2.5 times the median. The signal and noise are then extracted, and placed into separate files. Their respective spectrograms are then computed. 
 - signal/noise separation
 - Chunk Division
