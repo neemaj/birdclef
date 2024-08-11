@@ -17,6 +17,7 @@ Our approach included:
 
 ## Dataset
 Our data was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
+Our primary issue was finding a method to convert audio into an image that could be processed by our CNN. To achieve this, we transformed the audio data into spectrograms while making sure to isolate the bird calls. We also standardized the spectrograms into the same size and amplitude scale. We accounted for background noise and enhanced our model by layering different types of background noise and applying pitch and time shifting to the audio. 
 More info can be found here:
 Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview](https://www.kaggle.com/competitions/birdclef-2024/overview)
 
