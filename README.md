@@ -46,9 +46,12 @@ Kaggle competition: [https://www.kaggle.com/competitions/birdclef-2024/overview]
 To divide the sound file into signal and noise parts, we first computed a spectrogram of the entire file using a short-time Fourier transform (STFT). For the signal, we applied binary filters to remove noise, created an indicator vector that marks the signal interval, and identified pixels from the spectrogram that were three times the row and column median. A similar process is used for noise. The threshold is slightly lower with 2.5 times the median. The signal and noise are then extracted, and placed into separate files. Their respective spectrograms are then computed. 
 - signal/noise separation
   To achieve this we:
-  1 Created signal and noise masks
-  2 Apply binary erosion and dilation to the spectrogram
-  3 Observe how dilation refines signal presence and signal presence indicator
+
+  1) Created signal and noise masks
+
+  2) Apply binary erosion and dilation to the spectrogram
+
+  3) Observe how dilation refines signal presence and signal presence indicator
   
 - Chunk Division
 
