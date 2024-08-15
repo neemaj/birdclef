@@ -53,7 +53,10 @@ To divide the sound file into signal and noise parts, we first computed a spectr
   2) Apply binary erosion and dilation to the spectrogram
 
   3) Observe how dilation refines signal presence and signal presence indicator
+  <img width="1186" alt="Screen Shot 2024-08-14 at 4 00 07 PM" src="https://github.com/user-attachments/assets/33999301-4d4d-4587-b1ed-a993ce4c319f">
   
+  <img width="1139" alt="Screen Shot 2024-08-14 at 4 00 28 PM" src="https://github.com/user-attachments/assets/b4db9350-26a1-4396-a7d3-6b75aed7746c">
+
 - Chunk Division
 
 ## Data Augmentation 
