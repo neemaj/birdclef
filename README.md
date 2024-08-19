@@ -12,7 +12,8 @@ Our approach included:
 - [Dataset](#dataset)
 - [Preprocessing](#preprocessing)
 - [Data Augmentation](#data-augmentation)
-- [Results](#results)
+- [Results](#results)<img width="1051" alt="Screen Shot 2024-08-18 at 3 11 06 PM" src="https://github.com/user-attachments/assets/083e3ae8-ddcb-4392-b510-15ba902db2e4">
+
 - [Improvements](#improvments)
 
 ## Dataset
@@ -59,6 +60,13 @@ To divide the sound file into signal and noise parts, we first computed a spectr
 
 - Creating Spectrograms
 This code shows the audio waveforms in spectrograms, which can then be used as input to a convolutional neural network (CNN). Some functions generate spectrograms using Short-Time Fourier Transform (STFT), normalize the spectrogram data, and apply log scaling for better frequency representation. The code allows visualizing the spectrograms and isolating specific segments based on predefined criteria. The source code is inspired by TensorFlow's audio processing tutorial.
+
+<img width="1051" alt="Screen Shot 2024-08-18 at 3 11 06 PM" src="https://github.com/user-attachments/assets/f8d972cf-b142-47dd-9a12-9c53d7d4f1a2">
+
+![Uploading Screen Shot 2024-08-18 at 3.11.06 PM.png…]()
+
+
+
 
 ## Data Augmentation 
 
