@@ -63,7 +63,10 @@ This code shows the audio waveforms in spectrograms, which can then be used as i
 
 <img width="1051" alt="Screen Shot 2024-08-18 at 3 11 06 PM" src="https://github.com/user-attachments/assets/f8d972cf-b142-47dd-9a12-9c53d7d4f1a2">
 
-![Uploading Screen Shot 2024-08-18 at 3.11.06 PM.png…]()
+
+
+<img width="1186" alt="Screen Shot 2024-08-14 at 4 00 07 PM" src="https://github.com/user-attachments/assets/c74b896e-995a-4892-a6ae-87a7e61731b2">
+
 
 
 
