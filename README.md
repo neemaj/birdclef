@@ -74,6 +74,16 @@ This code shows the audio waveforms in spectrograms, which can then be used as i
 
 ## Data Augmentation 
 
+We performed data augmentation on the spectrograms using four key methods:
+
+1. Splititng the spectrogram into chunks of a specific size and adding pads to the end to check all chunks are equal size.
+
+2. Shifting the spectrogram along the time axis by a specified amount, simulating a time delay.
+
+3. Shifting the spectrogram along the frequency axis to simulate a change in pitch.
+
+4. Lowering the amplitude of the spectrogram by a given factor to resemble quieter audio.
+
 ## Results
 
 ## Improvments
