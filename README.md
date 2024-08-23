@@ -84,6 +84,12 @@ We performed data augmentation on the spectrograms using four key methods:
 
 4. Lowering the amplitude of the spectrogram by a given factor to resemble quieter audio.
 
+<img width="941" alt="Screen Shot 2024-08-23 at 4 13 03 PM" src="https://github.com/user-attachments/assets/81c37624-319b-4bb7-8045-e71db4957a1e">
+
+<img width="996" alt="Screen Shot 2024-08-23 at 4 12 42 PM" src="https://github.com/user-attachments/assets/e5716fa6-636b-4fcc-bf24-7be5a84ca52f">
+
+
+
 ## Results
 
 ## Improvments
