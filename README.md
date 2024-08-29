@@ -71,6 +71,12 @@ This code shows the audio waveforms in spectrograms, which can then be used as i
 
 ## CNN
 
+<img width="990" alt="Screen Shot 2024-08-29 at 2 56 42 PM" src="https://github.com/user-attachments/assets/9a21d53b-c459-486b-a92c-3b54a4ec2081">
+
+
+<img width="1015" alt="Screen Shot 2024-08-29 at 2 57 27 PM" src="https://github.com/user-attachments/assets/a5bb9736-b0b6-43f4-9384-235cb8cea935">
+<img width="1023" alt="Screen Shot 2024-08-29 at 2 57 13 PM" src="https://github.com/user-attachments/assets/4a0457cf-46e3-49ea-b4b5-95b658b6258d">
+<img width="1016" alt="Screen Shot 2024-08-29 at 2 56 59 PM" src="https://github.com/user-attachments/assets/ca036971-5381-4461-8d5c-5f16693b2d0e">
 
 
 ## Data Augmentation 
