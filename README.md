@@ -71,6 +71,8 @@ This code shows the audio waveforms in spectrograms, which can then be used as i
 
 ## CNN
 
+To create our Convolutional Neural Network (CNN), we used custom data generators with multi-processing, this allowed for dynamic data loading and preprocessing. It was designed with multiple convolutional layers, and optimized through hyperparameter tuning to balance accuracy and performance. 
+
 <img width="990" alt="Screen Shot 2024-08-29 at 2 56 42 PM" src="https://github.com/user-attachments/assets/9a21d53b-c459-486b-a92c-3b54a4ec2081">
 
 
