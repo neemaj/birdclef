@@ -106,61 +106,11 @@ We performed data augmentation on the spectrograms using four key methods:
 
 ## Results
 
-[iTerm2 Session Jul 18, 2024 at 1_08_20 AM.txt](https://github.com/user-attachments/files/16829748/iTerm2.Session.Jul.18.2024.at.1_08_20.AM.txt)(DS2) neemmac:BirdCLEF neema$ python test_accuracy.py 
-2024-07-18 01:03:47.894319: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 
-2024-07-18 01:03:50.035351: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags. 
-8/8 - 23s - loss: 6.3123 - sparse_categorical_accuracy: 0.7812 - 23s/epoch - 3s/step 
-Model: "sequential" 
-_________________________________________________________________ 
- Layer (type)                Output Shape              Param #    
-================================================================= 
- conv2d (Conv2D)             (8, 508, 252, 64)         1664       
-                                                                  
- max_pooling2d (MaxPooling2D  (8, 254, 251, 64)        0          
- )                                                                
-                                                                  
- conv2d_1 (Conv2D)           (8, 250, 247, 128)        204928     
-                                                                  
- max_pooling2d_1 (MaxPooling  (8, 125, 246, 128)       0          
- 2D)                                                              
-                                                                  
- conv2d_2 (Conv2D)           (8, 123, 244, 64)         73792      
-                                                                  
- max_pooling2d_2 (MaxPooling  (8, 61, 243, 64)         0          
- 2D)                                                              
-                                                                  
- conv2d_3 (Conv2D)           (8, 59, 241, 512)         295424     
-                                                                  
- max_pooling2d_3 (MaxPooling  (8, 29, 240, 512)        0          
- 2D)                                                              
-                                                                  
- flatten (Flatten)           (8, 3563520)              0          
-                                                                  
- dense (Dense)               (8, 512)                  1824522752 
-                                                                  
- dense_1 (Dense)             (8, 5)                    2565       
-                                                                  
-================================================================= 
-Total params: 1,825,101,125 
-Trainable params: 1,825,101,125 
-Non-trainable params: 0 
-_________________________________________________________________ 
-None 
-Restored model, accuracy: 78.12% 
- 
-8/8 [==============================] - 23s 3s/step 
-[[0.19463322 0.19695736 0.19692078 0.20831427 0.2031744 ] 
- [0.19463322 0.19695736 0.19692078 0.20831427 0.2031744 ] 
- [0.19463322 0.19695736 0.19692078 0.20831427 0.2031744 ] 
- ... 
- [0.19463322 0.19695736 0.19692078 0.20831427 0.2031744 ] 
- [0.19463322 0.19695736 0.19692078 0.20831427 0.2031744 ] 
- [0.19463322 0.19695736 0.19692078 0.20831427 0.20317441]] 
-8/8 [==============================] - 23s 3s/step 
-(250, 5) 
-(DS2) neemmac:BirdCLEF neema$  
+<img width="839" alt="Screen Shot 2024-09-01 at 11 41 50 AM" src="https://github.com/user-attachments/assets/5a29ce60-785c-44c1-bb06-12237912d590">
+
+<img width="702" alt="Screen Shot 2024-09-01 at 11 42 18 AM" src="https://github.com/user-attachments/assets/1319b209-0638-4775-baaa-58fd92caf23a">
+
+
 
 
 ## Improvments
