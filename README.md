@@ -1,4 +1,4 @@
-# Under-studied species in the Western Ghats audio identification 🐦
+# Bird Audio-Call Identification 🐦
 
 ## Objective 
 In this project, we created a convolutional neural network (CNN) to identify bird species in the Western Ghats, a biodiversity hotspot.
