@@ -73,19 +73,6 @@ This code shows the audio waveforms in spectrograms, which can then be used as i
 
 <img width="1186" alt="Screen Shot 2024-08-14 at 4 00 07 PM" src="https://github.com/user-attachments/assets/c74b896e-995a-4892-a6ae-87a7e61731b2">
 
-
-## CNN
-
-To create our Convolutional Neural Network (CNN), we used custom data generators with multi-processing, this allowed for dynamic data loading and preprocessing. It was designed with multiple convolutional layers, and optimized through hyperparameter tuning to balance accuracy and performance. 
-
-<img width="990" alt="Screen Shot 2024-08-29 at 2 56 42 PM" src="https://github.com/user-attachments/assets/9a21d53b-c459-486b-a92c-3b54a4ec2081">
-
-
-<img width="1015" alt="Screen Shot 2024-08-29 at 2 57 27 PM" src="https://github.com/user-attachments/assets/a5bb9736-b0b6-43f4-9384-235cb8cea935">
-<img width="1023" alt="Screen Shot 2024-08-29 at 2 57 13 PM" src="https://github.com/user-attachments/assets/4a0457cf-46e3-49ea-b4b5-95b658b6258d">
-<img width="1016" alt="Screen Shot 2024-08-29 at 2 56 59 PM" src="https://github.com/user-attachments/assets/ca036971-5381-4461-8d5c-5f16693b2d0e">
-
-
 ## Data Augmentation 
 
 We performed data augmentation on the spectrograms using four key methods:
@@ -101,6 +88,20 @@ We performed data augmentation on the spectrograms using four key methods:
 <img width="941" alt="Screen Shot 2024-08-23 at 4 13 03 PM" src="https://github.com/user-attachments/assets/81c37624-319b-4bb7-8045-e71db4957a1e">
 
 <img width="996" alt="Screen Shot 2024-08-23 at 4 12 42 PM" src="https://github.com/user-attachments/assets/e5716fa6-636b-4fcc-bf24-7be5a84ca52f">
+
+## CNN
+
+To create our Convolutional Neural Network (CNN), we used custom data generators with multi-processing, this allowed for dynamic data loading and preprocessing. It was designed with multiple convolutional layers, and optimized through hyperparameter tuning to balance accuracy and performance. 
+
+<img width="990" alt="Screen Shot 2024-08-29 at 2 56 42 PM" src="https://github.com/user-attachments/assets/9a21d53b-c459-486b-a92c-3b54a4ec2081">
+
+
+<img width="1015" alt="Screen Shot 2024-08-29 at 2 57 27 PM" src="https://github.com/user-attachments/assets/a5bb9736-b0b6-43f4-9384-235cb8cea935">
+<img width="1023" alt="Screen Shot 2024-08-29 at 2 57 13 PM" src="https://github.com/user-attachments/assets/4a0457cf-46e3-49ea-b4b5-95b658b6258d">
+<img width="1016" alt="Screen Shot 2024-08-29 at 2 56 59 PM" src="https://github.com/user-attachments/assets/ca036971-5381-4461-8d5c-5f16693b2d0e">
+
+
+
 
 
 
