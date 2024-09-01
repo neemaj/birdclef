@@ -3,9 +3,9 @@
 ## Objective 
 In this project, we created a convolutional neural network (CNN) to identify bird species in the Western Ghats, a biodiversity hotspot.
 Our approach included:
-- Implement preprocessing steps to handle to handle recording variables, signal noise separation, and chunk division.
-- Achieve high accuracy.
-- Employ signal/noise separation and chunk division to generate input features for the neural networks.
+- Implement preprocessing steps to handle to isolate and clean audio signal
+- Employ multiprocessing, generators, and disk-writing to improve computation efficiency
+- Utilize a CNN for identifying the species of origin for calls.
 
 
 ## Table Of Contents
