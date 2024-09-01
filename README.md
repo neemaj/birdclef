@@ -106,6 +106,8 @@ We performed data augmentation on the spectrograms using four key methods:
 
 ## Results
 
+Our model achieved an accuracy of 78.12% on both the training and validation data, which we initially found surprising as the test accuracy for a different model configuration also yielded the same accuracy. Despite variations in the number of parameters across models, this consistency in accuracy suggests a stable performance across different model architectures.
+
 <img width="839" alt="Screen Shot 2024-09-01 at 11 41 50 AM" src="https://github.com/user-attachments/assets/5a29ce60-785c-44c1-bb06-12237912d590">
 
 <img width="702" alt="Screen Shot 2024-09-01 at 11 42 18 AM" src="https://github.com/user-attachments/assets/1319b209-0638-4775-baaa-58fd92caf23a">
