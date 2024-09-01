@@ -22,7 +22,7 @@ Sprengel, E., Jaggi, M., Kilcher, Y., & Hofmann, T. (2016). Audio-Based Bird Spe
 We implemented our approaches inspired by the techniques used in this paper "Audio-Based Bird Species Identification using Deep Learning Techniques" by Sprengel.
 
 ## Dataset
-Our data was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
+Our data was used from the BirdClef Kaggle competition. We had training data that had bird calls of different lengtha and quality.
 
 Our primary issue was finding a method to convert audio into an image that could be processed by our CNN. To achieve this, we transformed the audio data into spectrograms while making sure to isolate the bird calls. We also standardized the spectrograms into the same size and amplitude scale. We accounted for background noise and enhanced our model by layering different types of background noise and applying pitch and time shifting to the audio. 
 
