@@ -16,6 +16,11 @@ Our approach included:
 
 - [Improvements](#improvments)
 
+## Citation
+Sprengel, E., Jaggi, M., Kilcher, Y., & Hofmann, T. (2016). Audio-Based Bird Species Identification using Deep Learning Techniques. Eidgenössische Technische Hochschule (ETH) Zürich, Zürich, Switzerland. Retrieved from ETH Zurich.
+
+We implemented our approaches inspired by the techniques used in this paper "Audio-Based Bird Species Identification using Deep Learning Techniques" by Sprengel.
+
 ## Dataset
 Our data was used from the BirdClef Kaggle competition. We had training data that had short recordings of bird calls.
 
