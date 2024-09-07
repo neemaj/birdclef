@@ -107,15 +107,14 @@ To create our Convolutional Neural Network (CNN), we used custom data generators
 
 ## Results
 
-Our model achieved an accuracy of 78.12% on both the training and validation data, which we initially found surprising as the test accuracy for a different model configuration also yielded the same accuracy. Despite variations in the number of parameters across models, this consistency in accuracy suggests a stable performance across different model architectures.
+During the course of our project, we encountered significant limitations related to computational resources. Due to these constraints, we were unable to run our final model on the full dataset as initially planned. Instead, we opted to develop and test a prototype model using a smaller subset of the data, specifically focusing on just 5 birds. This approach allowed us to manage our computational load effectively while still providing valuable insights into the model’s performance.
+
+Despite the reduced scale, our prototype model achieved an accuracy of 78.12% on both the training and validation datasets. This level of performance was consistent across different model configurations, which was initially surprising given the variations in the number of parameters among these configurations. The fact that the test accuracy for various model setups also yielded the same accuracy indicates a stable performance across different model architectures.
+
 
 <img width="839" alt="Screen Shot 2024-09-01 at 11 41 50 AM" src="https://github.com/user-attachments/assets/5a29ce60-785c-44c1-bb06-12237912d590">
 
 <img width="702" alt="Screen Shot 2024-09-01 at 11 42 18 AM" src="https://github.com/user-attachments/assets/1319b209-0638-4775-baaa-58fd92caf23a">
 
-
-
-
-## Improvments
 
 
